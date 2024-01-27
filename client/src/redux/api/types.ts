@@ -1,9 +1,11 @@
 export interface IUser {
     email: string
     role: string
-    _id: string
-    createdAt: Date
-    updatedAt: Date
+    id: string
+    name: string
+    age: number
+    created_at: Date
+    updated_at: Date
     __v: number
 }
 

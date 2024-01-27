@@ -6,7 +6,7 @@ import {
     LoadingButtonPrimary,
     LoadingButtonHeader,
     LoadingButtonVerify,
-} from '../styles/loadingButtonStyled'
+} from '../loadingButtonStyled'
 
 const PrimaryButton = styled(Button)`
     background-color: #007bff;

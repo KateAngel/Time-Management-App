@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { setUser } from '../features/userSlice'
 import { IUser } from './types'
+// import { ProfileInput } from '../../pages/profile/profile.name'
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string
 
@@ -14,7 +15,7 @@ export const userApi = createApi({
         getMe: builder.query<IUser, null>({
             query() {
                 return {
-                    url: 'me',
+                    url: 'profile',
                     credentials: 'include',
                 }
             },
@@ -27,5 +28,18 @@ export const userApi = createApi({
                 } catch (error) {}
             },
         }),
+
+        updateUser: builder.mutation<IUser, Partial<IUser>>({
+            query(data) {
+                return {
+                    url: 'profile/update-profile',
+                    method: 'PATCH',
+                    credentials: 'include',
+                    body: data,
+                }
+            },
+        }),
     }),
 })
+
+export const { useGetMeQuery, useUpdateUserMutation } = userApi

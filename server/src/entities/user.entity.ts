@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
-import { Entity, Column, BeforeInsert, Index } from 'typeorm'
+import crypto from 'crypto'
+import { Entity, Column, BeforeInsert, Index, OneToMany } from 'typeorm'
 import Model from './model.entity'
 
 export enum RoleEnumType {
@@ -13,6 +14,11 @@ export class User extends Model {
         nullable: true,
     })
     name!: string
+
+    @Column({
+        nullable: true,
+    })
+    age!: number
 
     @Index('email_index')
     @Column({
@@ -40,9 +46,15 @@ export class User extends Model {
     })
     verified: boolean
 
-    toJSON() {
-        return { ...this, password: undefined, verified: undefined }
-    }
+    @Index('verificationCode_index')
+    @Column({
+      type: 'text',
+      nullable: true,
+    })
+    verificationCode!: string | null;
+  
+    // @OneToMany(() => Post, (post) => post.user)
+    // posts: Post[];
 
     @BeforeInsert()
     async hashPassword() {
@@ -55,5 +67,25 @@ export class User extends Model {
         hashedPassword: string
     ) {
         return await bcrypt.compare(candidatePassword, hashedPassword)
+    }
+
+    static createVerificationCode() {
+        const verificationCode = crypto.randomBytes(32).toString('hex');
+    
+        const hashedVerificationCode = crypto
+          .createHash('sha256')
+          .update(verificationCode)
+          .digest('hex');
+    
+        return { verificationCode, hashedVerificationCode };
+    }
+
+    toJSON() {
+        return {
+            ...this,
+            password: undefined,
+            verified: undefined,
+            verificationCode: undefined,
+        };
     }
 }

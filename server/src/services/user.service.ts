@@ -1,6 +1,6 @@
 import config from 'config'
 import { User } from '../entities/user.entity'
-import { CreateUserInput } from '../schemas/user.schema'
+import { CreateUserInput, EditUserInput } from '../schemas/user.schema'
 import { AppDataSource } from '../utils/data-source'
 import redisClient from '../utils/connectRedis'
 import { signJwt } from '../utils/jwt'
@@ -23,6 +23,23 @@ export const findUserById = async (userId: string) => {
 
 export const findUser = async (query: Object) => {
     return await userRepository.findOneBy(query)
+}
+
+export const editUser = async (userId: string, input: EditUserInput) => {
+    const userToUpdate = await userRepository.findOneBy({ id: userId })
+    if (!userToUpdate) {
+        throw new Error(`User with ID ${userId} not found`);
+    }
+    if (input.name) {
+        userToUpdate.name = input.name;
+    }
+    if (input.age) {
+        userToUpdate.age = input.age;
+    }
+
+    await AppDataSource.manager.save(userToUpdate);
+
+    return userToUpdate;
 }
 
 // ? Sign access and Refresh Tokens

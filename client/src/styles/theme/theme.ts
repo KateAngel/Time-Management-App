@@ -19,6 +19,16 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             black: '#000',
             white: '#fff',
         },
+        error: {
+            main: Colors(mode).danger,
+        },
+        warning: {
+            main: Colors(mode).warning,
+        },
+        divider: Colors(mode).divider,
+        action: {
+            hover: Colors(mode).actionHover,
+        },
         ...(mode === MODES.LIGHT
             ? {
                   // palette values for light mode
@@ -47,13 +57,6 @@ export const getDesignTokens = (mode: PaletteMode) => ({
                       disabled: '',
                       icon: '',
                   },
-                  error: {
-                      main: Colors(mode).danger,
-                  },
-                  warning: {
-                      main: Colors(mode).warning,
-                  },
-                  divider: Colors(mode).divider,
               }
             : {
                   // mode === MODES.DARK
@@ -81,13 +84,6 @@ export const getDesignTokens = (mode: PaletteMode) => ({
                       primary: Colors(mode).textPrimary,
                       secondary: Colors(mode).textSecondary,
                   },
-                  error: {
-                      main: Colors(mode).danger,
-                  },
-                  warning: {
-                      main: Colors(mode).warning,
-                  },
-                  divider: Colors(mode).divider,
               }),
     },
 })

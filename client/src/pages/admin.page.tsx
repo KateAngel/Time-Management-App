@@ -6,7 +6,7 @@ const AdminPage = () => {
             <Box
                 sx={{
                     backgroundColor: '#ece9e9',
-                    mt: '2rem',
+                    mt: '4rem',
                     height: '15rem',
                     display: 'flex',
                     alignItems: 'center',

@@ -11,7 +11,6 @@ import { Controller, useFormContext } from 'react-hook-form'
 
 const Input = styled(_Input)`
     background-color: ${(props) => props.theme.palette.inputBG.main};
-
     padding: 0.3rem 0.75rem;
     font-size: 0.875rem;
     line-height: 1.25rem;

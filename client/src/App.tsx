@@ -17,14 +17,15 @@ import RequireUser from './components/requireUser'
 import AdminPage from './pages/admin.page'
 import HomePage from './pages/home.page'
 import LoginPage from './pages/login.page'
-import ProfilePage from './pages/profile.page'
+import ProfileInfo from './pages/profile/profile.info.page'
+import ProfilePage from './pages/profile/profile.page'
 import RegisterPage from './pages/register.page'
 import UnauthorizePage from './pages/unauthorize.page'
-import DesignPage from './theme/design'
+import DesignPage from './styles/theme/design'
 
 import EmailVerificationPage from './pages/verifyemail.page'
 
-import { getDesignTokens, getThemedComponents } from './theme/theme'
+import { getDesignTokens, getThemedComponents } from './styles/theme/theme'
 import { ColorModeContext } from './config/color-context'
 
 function App() {
@@ -72,10 +73,12 @@ function App() {
                                     />
                                 }
                             >
-                                <Route
-                                    path="profile"
-                                    element={<ProfilePage />}
-                                />
+                                <Route path="profile" element={<ProfilePage />}>
+                                    <Route
+                                        path="profile-info"
+                                        element={<ProfileInfo />}
+                                    />
+                                </Route>
                             </Route>
                             <Route
                                 element={

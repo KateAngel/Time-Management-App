@@ -84,6 +84,7 @@ export default function ThemeSwitchButton() {
                 />
             }
             label=""
+            sx={{ mr: 0 }}
         />
     )
 }

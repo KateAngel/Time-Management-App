@@ -5,9 +5,9 @@ import SendIcon from '@mui/icons-material/Send'
 import AlarmIcon from '@mui/icons-material/Alarm'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
 
-import FloatingActionButtons from '../styles/FloatingActionButtons'
-import ToggleButtonsMultiple from '../styles/ToggleButtons'
-import ThemeSwitchButton from '../styles/ThemeSwitch'
+import FloatingActionButtons from '../FloatingActionButtons'
+import ToggleButtonsMultiple from '../ToggleButtons'
+import ThemeSwitchButton from '../ThemeSwitch'
 
 const DesignPage = () => {
     return (

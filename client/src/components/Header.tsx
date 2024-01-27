@@ -61,7 +61,7 @@ const Header = () => {
     }
 
     return (
-        <AppBar position="static">
+        <AppBar>
             <Container maxWidth="lg">
                 <Toolbar>
                     <TypographyTitle />
@@ -84,13 +84,29 @@ const Header = () => {
                             </>
                         )}
                         {user && (
-                            <LoadingButton
-                                sx={{ backgroundColor: '#eee' }}
-                                onClick={onLogoutHandler}
-                                loading={isLoading}
-                            >
-                                Logout
-                            </LoadingButton>
+                            <>
+                                <LoadingButton
+                                    onClick={onLogoutHandler}
+                                    loading={isLoading}
+                                >
+                                    Logout
+                                </LoadingButton>
+                                <Box sx={{ mr: 2 }}>
+                                    <Tooltip
+                                        title="Profile"
+                                        onClick={() => navigate('/profile')}
+                                    >
+                                        <IconButton sx={{ p: 0 }}>
+                                            <Avatar
+                                                alt="Remy Sharp"
+                                                src="/static/images/avatar/2.jpg"
+                                            >
+                                                HH
+                                            </Avatar>
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+                            </>
                         )}
                         {user && user?.role === 'admin' && (
                             <LoadingButton
@@ -100,22 +116,7 @@ const Header = () => {
                                 Admin
                             </LoadingButton>
                         )}
-                        {/* <Box sx={{ ml: 4 }}>
-                            <Tooltip
-                                title="Post settings"
-                                onClick={() => navigate('/profile')}
-                            >
-                                <IconButton sx={{ p: 0 }}>
-                                    <Avatar
-                                        alt="Remy Sharp"
-                                        src="/static/images/avatar/2.jpg"
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                        </Box>
-                        */}
                     </Box>
-
                     <ThemeSwitchButton />
                 </Toolbar>
             </Container>

@@ -9,7 +9,6 @@
         "build": "tsc -p .",
         "typeorm": "typeorm-ts-node-commonjs -d ./src/utils/data-source.ts",
         "migrate": "npm run clean && npm run build && npm run typeorm:migrate",
-        "db:push": "npm run clean && npm run build && npm run typeorm:run",
         "clean": "rimraf build",
         "typeorm:migrate": "npm run typeorm migration:generate ./src/migrations/added-user-entity",
         "typeorm:run": "npm run typeorm migration:run"
@@ -47,7 +46,7 @@
         "html-to-text": "^9.0.5",
         "jsonwebtoken": "^9.0.2",
         "morgan": "^1.10.0",
-        "nodemailer": "^6.9.7",
+        "nodemailer": "^6.9.8",
         "pg": "^8.4.0",
         "pug": "^3.0.2",
         "redis": "^4.6.12",

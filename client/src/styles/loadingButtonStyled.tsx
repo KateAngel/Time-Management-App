@@ -5,6 +5,7 @@ import { LoadingButton as _LoadingButton } from '@mui/lab'
 export const LoadingButtonHeader = styled(_LoadingButton)`
     padding: 0.4rem;
     margin-right: 1rem;
+    text-transform: none;
 `
 
 export const LoadingButtonPrimary = styled(_LoadingButton)`

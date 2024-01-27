@@ -4,7 +4,6 @@ import config from 'config';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import nodemailer from 'nodemailer';
 
 import validateEnv from './utils/validateEnv';
 import { AppDataSource } from './utils/data-source';
