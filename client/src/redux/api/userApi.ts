@@ -15,7 +15,7 @@ export const userApi = createApi({
         getMe: builder.query<IUser, null>({
             query() {
                 return {
-                    url: 'profile',
+                    url: 'my-profile',
                     credentials: 'include',
                 }
             },
@@ -32,7 +32,7 @@ export const userApi = createApi({
         updateUser: builder.mutation<IUser, Partial<IUser>>({
             query(data) {
                 return {
-                    url: 'profile/update-profile',
+                    url: 'my-profile/profile-info',
                     method: 'PATCH',
                     credentials: 'include',
                     body: data,

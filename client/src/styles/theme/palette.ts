@@ -17,7 +17,7 @@ export const Colors = (mode: PaletteMode) => ({
               secondaryLight: 'hsl(175, 35%, 35%)',
               secondaryDark: 'hsl(175, 25%, 19%)',
               secondary_contrastText: 'hsl(42,80%,58%)',
-              textSecondary: 'hsl(0,0%,19%)',
+              textSecondary: 'hsl(0,0%,33%)',
               inputBG: 'hsl(47,80%,89%)',
               muted: 'hsl(0,0%,83%)',
               divider: 'hsl(47,80%,73%)',
@@ -27,9 +27,9 @@ export const Colors = (mode: PaletteMode) => ({
           }
         : {
               body_bg: 'hsl(0, 0%, 0%)',
-              bg_paper: 'hsl(0, 0%, 7%)',
+              bg_paper: 'hsl(0, 0%, 10%)',
               textPrimary: 'hsl(0,0%,100%)',
-              primaryMain: 'hsl(42,80%,58%)',
+              primaryMain: 'hsl(42,80%,53%)',
               primaryLight: 'hsl(42,80%,81%)',
               primaryDark: 'hsl(42,80%,48%)',
               primary_contrastText: 'hsl(0, 0%, 5%)',
@@ -37,10 +37,10 @@ export const Colors = (mode: PaletteMode) => ({
               secondaryLight: 'hsl(175, 35%, 35%)',
               secondaryDark: 'hsl(175, 25%, 19%)',
               secondary_contrastText: 'hsl(42,80%,58%)',            
-              textSecondary: 'hsl(0,0%,89%)',
-              inputBG: 'hsl(0,0%,13%)',
+              textSecondary: 'hsl(0,0%,53%)',
+              inputBG: 'hsl(0,0%,19%)',
               muted: 'hsl(0, 0%, 33%)',
-              divider: 'hsl(0,0%,13%)',
+              divider: 'hsl(0,0%,19%)',
               actionHover: 'hsl(0,0%,13%)',
               inverse: '#95a0a7',
               shaft: '#555',
@@ -52,7 +52,7 @@ export const Colors = (mode: PaletteMode) => ({
     ///////////////
     // Solid Color
     ///////////////
-    white: '#fff',
+    //white: '#fff',
     black: '#000',
     green: '#a4d037',
     yellow: '#fecd35',

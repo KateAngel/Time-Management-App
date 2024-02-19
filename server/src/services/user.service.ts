@@ -28,18 +28,18 @@ export const findUser = async (query: Object) => {
 export const editUser = async (userId: string, input: EditUserInput) => {
     const userToUpdate = await userRepository.findOneBy({ id: userId })
     if (!userToUpdate) {
-        throw new Error(`User with ID ${userId} not found`);
+        throw new Error(`User with ID ${userId} not found`)
     }
     if (input.name) {
-        userToUpdate.name = input.name;
+        userToUpdate.name = input.name
     }
     if (input.age) {
-        userToUpdate.age = input.age;
+        userToUpdate.age = input.age
     }
 
-    await AppDataSource.manager.save(userToUpdate);
+    await AppDataSource.manager.save(userToUpdate)
 
-    return userToUpdate;
+    return userToUpdate
 }
 
 // ? Sign access and Refresh Tokens

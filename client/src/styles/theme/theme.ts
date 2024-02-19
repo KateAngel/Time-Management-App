@@ -1,4 +1,3 @@
-import { common } from '@mui/material/colors'
 import { PaletteMode } from '@mui/material'
 import { Colors } from './palette'
 import { MODES } from './modes'
@@ -49,7 +48,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
                       main: Colors(mode).secondaryMain,
                       light: Colors(mode).secondaryLight,
                       dark: Colors(mode).secondaryDark,
-                      contrastText: Colors(mode).primary_contrastText,
+                      contrastText: Colors(mode).secondary_contrastText,
                   },
                   text: {
                       primary: Colors(mode).textPrimary, //blueGrey[900], // grey[900]
@@ -103,11 +102,7 @@ export const getThemedComponents = (mode: PaletteMode) => {
             },
             MuiLoadingButton: {
                 styleOverrides: {
-                    root: {
-                        color: designTokens.palette.primary.main,
-                        fontFamily:
-                            "Oswald, Roboto, 'Helvetica Neue', Arial, sans-serif",
-                    },
+                    root: {},
                 },
             },
             MuiBox: {
@@ -143,16 +138,11 @@ export const getThemedComponents = (mode: PaletteMode) => {
                           variants: [
                               {
                                   props: { variant: 'contained' },
-                                  style: {
-                                      fontFamily:
-                                          "Oswald, Roboto, 'Helvetica Neue', Arial, sans-serif",
-                                  },
+                                  style: {},
                               },
                               {
                                   props: { variant: 'outlined' },
-                                  style: {
-                                      color: common.white,
-                                  },
+                                  style: {},
                               },
                               {
                                   props: {
@@ -174,7 +164,6 @@ export const getThemedComponents = (mode: PaletteMode) => {
                       MuiMenuItem: {
                           styleOverrides: {
                               root: {
-                                  color: common.white,
                                   alignItems: 'stretch',
                                   fontFamily:
                                       "Oswald, Roboto, 'Helvetica Neue', Arial, sans-serif",
@@ -183,11 +172,7 @@ export const getThemedComponents = (mode: PaletteMode) => {
                       },
                       MuiAccordion: {
                           styleOverrides: {
-                              root: {
-                                  color: common.white,
-                                  fontFamily:
-                                      "Oswald, Roboto, 'Helvetica Neue', Arial, sans-serif",
-                              },
+                              root: {},
                           },
                       },
                   }),

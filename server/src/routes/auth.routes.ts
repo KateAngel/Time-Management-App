@@ -9,7 +9,11 @@ import {
 import { deserializeUser } from '../middleware/deserializeUser'
 import { requireUser } from '../middleware/requireUser'
 import { validate } from '../middleware/validate'
-import { createUserSchema, loginUserSchema, verifyEmailSchema } from '../schemas/user.schema'
+import {
+    createUserSchema,
+    loginUserSchema,
+    verifyEmailSchema,
+} from '../schemas/user.schema'
 
 const router = express.Router()
 
@@ -21,7 +25,7 @@ router.get(
     '/verifyemail/:verificationCode',
     validate(verifyEmailSchema),
     verifyEmailHandler
-);
+)
 
 // Login user
 router.post('/login', validate(loginUserSchema), loginUserHandler)
@@ -37,6 +41,6 @@ router.get(
     '/verifyemail/:verificationCode',
     validate(verifyEmailSchema),
     verifyEmailHandler
-);
+)
 
 export default router

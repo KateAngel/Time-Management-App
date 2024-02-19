@@ -77,11 +77,7 @@ export default function ThemeSwitchButton() {
     return (
         <FormControlLabel
             control={
-                <MaterialUISwitch
-                    sx={{ m: 1 }}
-                    checked={checked}
-                    onChange={handleChange}
-                />
+                <MaterialUISwitch checked={checked} onChange={handleChange} />
             }
             label=""
             sx={{ mr: 0 }}

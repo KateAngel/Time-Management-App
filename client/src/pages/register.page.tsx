@@ -1,6 +1,6 @@
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Typography } from '@mui/material'
+import { Box, Container, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 import { useEffect } from 'react'
@@ -14,7 +14,7 @@ import FormInput from '../components/FormInput'
 import TypographyTitle from '../components/TypographyTitle'
 import { useRegisterUserMutation } from '../redux/api/authApi'
 import { LoadingButtonPrimary as LoadingButton } from '../styles/loadingButtonStyled'
-import { CommonBox, CommonContainer, LinkItem } from '../styles/styled'
+import { LinkItem } from '../styles/styled'
 
 const registerSchema = object({
     email: string()
@@ -88,8 +88,16 @@ const RegisterPage = () => {
     }
 
     return (
-        <CommonContainer maxWidth={false}>
-            <CommonBox>
+        <Container
+            maxWidth={false}
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+            }}
+        >
+            <Box>
                 <FormProvider {...methods}>
                     <Box
                         component="form"
@@ -126,7 +134,7 @@ const RegisterPage = () => {
                                 mt: 4,
                             }}
                         >
-                            Sign Up To Get Started!
+                            Create your account to get started!
                         </Typography>
                         <FormInput
                             name="email"
@@ -162,12 +170,12 @@ const RegisterPage = () => {
                             }}
                         >
                             Already have an account?{' '}
-                            <LinkItem to="/login">Login Here</LinkItem>
+                            <LinkItem to="/login">Log in</LinkItem>
                         </Typography>
                     </Box>
                 </FormProvider>
-            </CommonBox>
-        </CommonContainer>
+            </Box>
+        </Container>
     )
 }
 

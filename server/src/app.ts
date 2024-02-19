@@ -1,16 +1,19 @@
-require('dotenv').config();
-import express, { NextFunction, Request, Response } from 'express';
-import config from 'config';
-import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
+require('dotenv').config()
+import express, { NextFunction, Request, Response } from 'express'
+import config from 'config'
+import morgan from 'morgan'
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
 
-import validateEnv from './utils/validateEnv';
-import { AppDataSource } from './utils/data-source';
-import redisClient from './utils/connectRedis';
-import AppError from './utils/appError';
-import authRouter from './routes/auth.routes';
-import userRouter from './routes/user.routes';
+import validateEnv from './utils/validateEnv'
+import { AppDataSource } from './utils/data-source'
+import redisClient from './utils/connectRedis'
+import AppError from './utils/appError'
+import authRouter from './routes/auth.routes'
+import userRouter from './routes/user.routes'
+import categoryRouter from './routes/category.routes'
+import projectRouter from './routes/project.routes'
+import taskRouter from './routes/task.routes'
 
 // import nodemailer from 'nodemailer';
 // (async function () {
@@ -51,13 +54,16 @@ AppDataSource.initialize()
         // ROUTES
         app.use('/api/auth', authRouter)
         app.use('/api/users', userRouter)
+        app.use('/api/categories', categoryRouter)
+        app.use('/api/projects', projectRouter)
+        app.use('/api/to-do-list', taskRouter)
 
-        // HEALTH CHECKER
+        // CHECKER
         app.get('/api/healthchecker', async (_, res: Response) => {
             const message = await redisClient.get('try')
             res.status(200).json({
                 status: 'success',
-                message,
+                message: 'Server is running',
             })
         })
 

@@ -2,6 +2,9 @@ import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { Entity, Column, BeforeInsert, Index, OneToMany } from 'typeorm'
 import Model from './model.entity'
+import { Task } from './task.entity'
+import { ProjectTitle } from './project.entity'
+import { ProjectCategory } from './project.category.entity'
 
 export enum RoleEnumType {
     USER = 'user',
@@ -48,13 +51,23 @@ export class User extends Model {
 
     @Index('verificationCode_index')
     @Column({
-      type: 'text',
-      nullable: true,
+        type: 'text',
+        nullable: true,
     })
-    verificationCode!: string | null;
-  
-    // @OneToMany(() => Post, (post) => post.user)
-    // posts: Post[];
+    verificationCode!: string | null
+
+    @OneToMany((_type) => ProjectCategory, (category) => category.user, {
+        eager: true,
+    })
+    categories: ProjectCategory[]
+
+    @OneToMany((_type) => ProjectTitle, (project) => project.user, {
+        eager: true,
+    })
+    projects: ProjectTitle[]
+
+    @OneToMany((_type) => Task, (task) => task.user, { eager: true })
+    tasks: Task[]
 
     @BeforeInsert()
     async hashPassword() {
@@ -70,14 +83,14 @@ export class User extends Model {
     }
 
     static createVerificationCode() {
-        const verificationCode = crypto.randomBytes(32).toString('hex');
-    
+        const verificationCode = crypto.randomBytes(32).toString('hex')
+
         const hashedVerificationCode = crypto
-          .createHash('sha256')
-          .update(verificationCode)
-          .digest('hex');
-    
-        return { verificationCode, hashedVerificationCode };
+            .createHash('sha256')
+            .update(verificationCode)
+            .digest('hex')
+
+        return { verificationCode, hashedVerificationCode }
     }
 
     toJSON() {
@@ -86,6 +99,6 @@ export class User extends Model {
             password: undefined,
             verified: undefined,
             verificationCode: undefined,
-        };
+        }
     }
 }

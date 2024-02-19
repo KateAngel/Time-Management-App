@@ -1,7 +1,11 @@
 import { CookieOptions, NextFunction, Request, Response } from 'express'
 import config from 'config'
 import crypto from 'crypto'
-import { CreateUserInput, LoginUserInput, VerifyEmailInput } from '../schemas/user.schema'
+import {
+    CreateUserInput,
+    LoginUserInput,
+    VerifyEmailInput,
+} from '../schemas/user.schema'
 import {
     createUser,
     findUser,
@@ -53,33 +57,33 @@ export const registerUserHandler = async (
             password,
         })
         const { hashedVerificationCode, verificationCode } =
-            User.createVerificationCode();
-        newUser.verificationCode = hashedVerificationCode;
-        await newUser.save();
+            User.createVerificationCode()
+        newUser.verificationCode = hashedVerificationCode
+        await newUser.save()
         console.log(newUser)
         // Send Verification Email
         const redirectUrl = `${config.get<string>(
             'origin'
-        )}/verifyemail/${verificationCode}`;
+        )}/verifyemail/${verificationCode}`
         console.log(redirectUrl)
-    
+
         try {
-            await new Email(newUser, redirectUrl).sendVerificationCode();
+            await new Email(newUser, redirectUrl).sendVerificationCode()
 
             res.status(201).json({
                 status: 'success',
                 message:
                     'An email with a verification code has been sent to your email',
-            });
+            })
         } catch (error) {
-            console.log(error);
-            newUser.verificationCode = null;
-            await newUser.save();
-    
+            console.log(error)
+            newUser.verificationCode = null
+            await newUser.save()
+
             return res.status(500).json({
                 status: 'error',
                 message: 'There was an error sending email, please try again',
-            });
+            })
         }
     } catch (err: any) {
         if (err.code === '23505') {
@@ -101,26 +105,26 @@ export const verifyEmailHandler = async (
         const verificationCode = crypto
             .createHash('sha256')
             .update(req.params.verificationCode)
-            .digest('hex');
-    
-        const user = await findUser({ verificationCode });
-    
+            .digest('hex')
+
+        const user = await findUser({ verificationCode })
+
         if (!user) {
-            return next(new AppError(401, 'Could not verify email'));
+            return next(new AppError(401, 'Could not verify email'))
         }
-    
-        user.verified = true;
-        user.verificationCode = null;
-        await user.save();
-    
+
+        user.verified = true
+        user.verificationCode = null
+        await user.save()
+
         res.status(200).json({
             status: 'success',
             message: 'Email verified successfully',
-        });
+        })
     } catch (err: any) {
-        next(err);
+        next(err)
     }
-};
+}
 
 // ? Login User Controller
 export const loginUserHandler = async (
@@ -134,38 +138,38 @@ export const loginUserHandler = async (
 
         // 1. Check if user exist
         if (!user) {
-            return next(new AppError(400, 'Invalid email or password'));
+            return next(new AppError(400, 'Invalid email or password'))
         }
-    
+
         // 2. Check if the user is verified
         if (!user.verified) {
-            return next(new AppError(400, 'You are not verified'));
+            return next(new AppError(400, 'You are not verified'))
         }
-    
+
         //3. Check if password is valid
         if (!(await User.comparePasswords(password, user.password))) {
-            return next(new AppError(400, 'Invalid email or password'));
+            return next(new AppError(400, 'Invalid email or password'))
         }
-    
+
         // 4. Sign Access and Refresh Tokens
-        const { access_token, refresh_token } = await signTokens(user);
-    
+        const { access_token, refresh_token } = await signTokens(user)
+
         // 5. Add Cookies
-        res.cookie('access_token', access_token, accessTokenCookieOptions);
-        res.cookie('refresh_token', refresh_token, refreshTokenCookieOptions);
+        res.cookie('access_token', access_token, accessTokenCookieOptions)
+        res.cookie('refresh_token', refresh_token, refreshTokenCookieOptions)
         res.cookie('logged_in', true, {
             ...accessTokenCookieOptions,
             httpOnly: false,
-        });
-    
+        })
+
         // 6. Send response
         res.status(200).json({
             status: 'success',
             access_token,
-        });
+        })
     } catch (err: any) {
-      next(err);
-      console.log(err)
+        next(err)
+        console.log(err)
     }
 }
 

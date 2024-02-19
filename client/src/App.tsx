@@ -6,6 +6,8 @@ import {
 } from '@mui/material/styles'
 import { deepmerge } from '@mui/utils'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon'
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
@@ -19,12 +21,16 @@ import HomePage from './pages/home.page'
 import LoginPage from './pages/login.page'
 import ProfileInfo from './pages/profile/profile.info.page'
 import ProfilePage from './pages/profile/profile.page'
+import Dashbord from './pages/profile/dashboard'
+import MyCalendar from './pages/profile/myCalendar'
+import ProjectCategories from './pages/profile/categories'
+import MyProjects from './pages/profile/projects'
+import ToDoList from './pages/profile/toDoList'
 import RegisterPage from './pages/register.page'
 import UnauthorizePage from './pages/unauthorize.page'
-import DesignPage from './styles/theme/design'
-
 import EmailVerificationPage from './pages/verifyemail.page'
 
+import DesignPage from './styles/theme/design'
 import { getDesignTokens, getThemedComponents } from './styles/theme/theme'
 import { ColorModeContext } from './config/color-context'
 
@@ -59,51 +65,79 @@ function App() {
         <>
             <ColorModeContext.Provider value={colorMode}>
                 <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <ToastContainer />
-                    <Routes>
-                        <Route path="/" element={<Layout />}>
-                            <Route index element={<HomePage />} />
-                            <Route path="design" element={<DesignPage />} />
-                            {/* Private Route */}
-                            <Route
-                                element={
-                                    <RequireUser
-                                        allowedRoles={['user', 'admin']}
-                                    />
-                                }
-                            >
-                                <Route path="profile" element={<ProfilePage />}>
+                    <LocalizationProvider dateAdapter={AdapterLuxon}>
+                        <CssBaseline />
+                        <ToastContainer />
+                        <Routes>
+                            <Route path="/" element={<Layout />}>
+                                <Route index element={<HomePage />} />
+                                <Route path="design" element={<DesignPage />} />
+                                {/* Private Route */}
+                                <Route
+                                    element={
+                                        <RequireUser
+                                            allowedRoles={['user', 'admin']}
+                                        />
+                                    }
+                                >
                                     <Route
-                                        path="profile-info"
-                                        element={<ProfileInfo />}
+                                        path="my-profile"
+                                        element={<ProfilePage />}
+                                    >
+                                        <Route
+                                            path="dashboard"
+                                            element={<Dashbord />}
+                                        />
+                                        <Route
+                                            path="profile-info"
+                                            element={<ProfileInfo />}
+                                        />
+                                        <Route
+                                            path="categories"
+                                            element={<ProjectCategories />}
+                                        />
+                                        <Route
+                                            path="projects"
+                                            element={<MyProjects />}
+                                        />
+                                        <Route
+                                            path="to-do-list"
+                                            element={<ToDoList />}
+                                        />
+                                        <Route
+                                            path="calendar"
+                                            element={<MyCalendar />}
+                                        />
+                                    </Route>
+                                </Route>
+                                <Route
+                                    element={
+                                        <RequireUser allowedRoles={['admin']} />
+                                    }
+                                >
+                                    <Route
+                                        path="admin"
+                                        element={<AdminPage />}
                                     />
                                 </Route>
+                                <Route
+                                    path="unauthorized"
+                                    element={<UnauthorizePage />}
+                                />
                             </Route>
                             <Route
-                                element={
-                                    <RequireUser allowedRoles={['admin']} />
-                                }
-                            >
-                                <Route path="admin" element={<AdminPage />} />
-                            </Route>
-                            <Route
-                                path="unauthorized"
-                                element={<UnauthorizePage />}
-                            />
-                        </Route>
-                        <Route
-                            path="verifyemail"
-                            element={<EmailVerificationPage />}
-                        >
-                            <Route
-                                path=":verificationCode"
+                                path="verifyemail"
                                 element={<EmailVerificationPage />}
-                            />
-                        </Route>
-                        <Route path="login" element={<LoginPage />} />
-                        <Route path="register" element={<RegisterPage />} />
-                    </Routes>
+                            >
+                                <Route
+                                    path=":verificationCode"
+                                    element={<EmailVerificationPage />}
+                                />
+                            </Route>
+                            <Route path="login" element={<LoginPage />} />
+                            <Route path="register" element={<RegisterPage />} />
+                        </Routes>
+                    </LocalizationProvider>
                 </ThemeProvider>
             </ColorModeContext.Provider>
         </>

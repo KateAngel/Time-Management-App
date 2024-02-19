@@ -1,6 +1,6 @@
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Typography } from '@mui/material'
+import { Box, Container, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 import { useEffect } from 'react'
@@ -14,7 +14,7 @@ import FormInput from '../components/FormInput'
 import TypographyTitle from '../components/TypographyTitle'
 import { useLoginUserMutation } from '../redux/api/authApi'
 import { LoadingButtonPrimary as LoadingButton } from '../styles/loadingButtonStyled'
-import { CommonBox, CommonContainer, LinkItem } from '../styles/styled'
+import { LinkItem } from '../styles/styled'
 
 const loginSchema = object({
     email: string()
@@ -43,7 +43,7 @@ const LoginPage = () => {
     const location = useLocation()
 
     const from =
-        ((location.state as any)?.from.pathname as string) || '/profile'
+        ((location.state as any)?.from.pathname as string) || '/my-profile'
 
     const {
         reset,
@@ -85,8 +85,16 @@ const LoginPage = () => {
     }
 
     return (
-        <CommonContainer maxWidth={false}>
-            <CommonBox>
+        <Container
+            maxWidth={false}
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+            }}
+        >
+            <Box>
                 <FormProvider {...methods}>
                     <Box
                         component="form"
@@ -118,7 +126,7 @@ const LoginPage = () => {
                                 letterSpacing: 1,
                             }}
                         >
-                            Sign In
+                            Welcome back
                         </Typography>
                         <Typography
                             variant="body1"
@@ -152,7 +160,7 @@ const LoginPage = () => {
                             type="submit"
                             loading={isLoading}
                         >
-                            Login
+                            Log in
                         </LoadingButton>
 
                         <Typography
@@ -162,13 +170,13 @@ const LoginPage = () => {
                                 textAlign: 'center',
                             }}
                         >
-                            Create an account?{' '}
+                            Don&apos;t have an account?{' '}
                             <LinkItem to="/register">Sign Up Here</LinkItem>
                         </Typography>
                     </Box>
                 </FormProvider>
-            </CommonBox>
-        </CommonContainer>
+            </Box>
+        </Container>
     )
 }
 

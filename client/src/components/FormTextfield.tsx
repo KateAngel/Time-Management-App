@@ -1,25 +1,6 @@
-import {
-    TextField as _TextField,
-    Typography as _Typography,
-    TextFieldProps,
-} from '@mui/material'
-import { styled, useTheme } from '@mui/material/styles'
+import { TextField, Typography, TextFieldProps } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import { FC } from 'react'
-
-const Typography = styled(_Typography)({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '1rem',
-    maxWidth: '50rem',
-    width: '100%',
-    height: '100%',
-})
-
-const TextField = styled(_TextField)({
-    width: '70%',
-    textAlign: 'left',
-})
 
 type IFormProps = {
     name: string
@@ -29,9 +10,25 @@ const FormTextField: FC<IFormProps> = ({ name, ...otherProps }) => {
     const theme = useTheme()
 
     return (
-        <Typography gutterBottom>
+        <Typography
+            gutterBottom
+            display="flex"
+            alignItems="stretch"
+            justifyContent="space-between"
+            maxWidth="50rem"
+            width="100%"
+            height="100%"
+            sx={{
+                flexDirection: { xs: 'column', md: 'row' },
+                fontSize: '12px',
+            }}
+        >
             <strong>{name}</strong>
-            <TextField variant="filled" {...otherProps} />
+            <TextField
+                variant="filled"
+                {...otherProps}
+                sx={{ width: { xs: '100%', md: '70%' }, textAlign: 'left' }}
+            />
         </Typography>
     )
 }

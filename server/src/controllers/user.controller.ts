@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { EditUserInput } from '../schemas/user.schema'
-import {
-    editUser,
-} from '../services/user.service'
+import { editUser } from '../services/user.service'
 
 export const getMeHandler = async (
     req: Request,

@@ -14,6 +14,7 @@ import { useUpdateUserMutation } from '../../redux/api/userApi'
 import { useAppSelector } from '../../redux/store'
 import FormTextField from '../../components/FormTextfield'
 import { LoadingButtonPrimary as LoadingButton } from '../../styles/loadingButtonStyled'
+import { TabTitleTypography } from '../../styles/profile.styles'
 
 const ProfileInfo = () => {
     const user = useAppSelector((state) => state.userState.user)
@@ -73,35 +74,26 @@ const ProfileInfo = () => {
                 component="form"
                 noValidate
                 autoComplete="off"
-                minWidth="37rem"
-                width="100%"
+                display="flex"
+                flexDirection="column"
+                //width="100%"
                 sx={{
-                    p: { xs: '1rem', sm: '2rem' },
-                    borderRadius: 1,
+                    gap: { xs: '1rem', md: '0rem' },
                 }}
             >
-                <Typography
-                    gutterBottom
-                    textAlign="center"
-                    variant="h2"
-                    component="h1"
-                    sx={{
-                        fontWeight: 600,
-                        fontSize: { xs: '1rem', md: '2rem' },
-                        letterSpacing: 1,
-                    }}
-                >
-                    Profile Info
-                </Typography>
+                <TabTitleTypography>Profile Info</TabTitleTypography>
                 <Typography
                     gutterBottom
                     display="flex"
-                    alignItems="center"
+                    alignItems="stretch"
                     justifyContent="space-between"
-                    gap="1rem"
                     maxWidth="50rem"
                     width="100%"
                     height="100%"
+                    sx={{
+                        flexDirection: { xs: 'column', md: 'row' },
+                        fontSize: '12px',
+                    }}
                 >
                     <strong>Profile picture</strong>
                     <Box width="70%" display="flex" justifyContent="center">
@@ -113,7 +105,10 @@ const ProfileInfo = () => {
                                 <Avatar
                                     alt="Remy Sharp"
                                     src="/static/images/avatar/2.jpg"
-                                    sx={{ width: '10rem', height: '10rem' }}
+                                    sx={{
+                                        width: { xs: '5rem', md: '5rem' },
+                                        height: { xs: '5rem', md: '5rem' },
+                                    }}
                                 >
                                     HH
                                 </Avatar>
@@ -142,14 +137,14 @@ const ProfileInfo = () => {
                 />
                 <FormTextField
                     name="Name"
-                    label="Enter your name"
+                    label={editing ? 'Enter your name' : ''}
                     value={editing ? newName : user?.name || ''}
                     onChange={handleNameChange}
                     disabled={!editing}
                 />
                 <FormTextField
                     name="Age"
-                    label="Enter your age"
+                    label={editing ? 'Enter your age' : ''}
                     value={editing ? newAge : user?.age || ''}
                     onChange={handleAgeChange}
                     disabled={!editing}
@@ -158,18 +153,29 @@ const ProfileInfo = () => {
                     display="flex"
                     justifyContent="center"
                     gap="1rem"
-                    ml="30%"
                     mt="1rem"
+                    sx={{ ml: { xs: '0', md: '30%' } }}
                 >
                     <Tooltip title="Edit personal info" placement="top-start">
-                        <LoadingButton
-                            sx={{ p: 0 }}
-                            onClick={() => {
-                                setEditing(true)
-                            }}
-                        >
-                            Edit
-                        </LoadingButton>
+                        {!editing ? (
+                            <LoadingButton
+                                sx={{ p: 0 }}
+                                onClick={() => {
+                                    setEditing(true)
+                                }}
+                            >
+                                Edit
+                            </LoadingButton>
+                        ) : (
+                            <LoadingButton
+                                sx={{ p: 0 }}
+                                onClick={() => {
+                                    setEditing(false)
+                                }}
+                            >
+                                Cancel
+                            </LoadingButton>
+                        )}
                     </Tooltip>
                     <Tooltip title="Save changes" placement="top-start">
                         <LoadingButton

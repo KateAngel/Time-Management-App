@@ -1,78 +1,62 @@
-import { Box, Container, Tab, Tabs } from '@mui/material'
+import { Box, Container, Divider, Tab, Tabs } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import Home from '@mui/icons-material/Home'
-import AccountBoxIcon from '@mui/icons-material/AccountBox'
+import MenuSharpIcon from '@mui/icons-material/MenuSharp'
+import ArrowBackIosSharp from '@mui/icons-material/ArrowForwardIosSharp'
+import LeaderboardSharpIcon from '@mui/icons-material/LeaderboardSharp'
+import BarChartSharpIcon from '@mui/icons-material/BarChartSharp'
+import HomeSharpIcon from '@mui/icons-material/HomeSharp'
+import AccountBoxSharpIcon from '@mui/icons-material/AccountBoxSharp'
+import CategorySharpIcon from '@mui/icons-material/CategorySharp'
+import CasesSharpIcon from '@mui/icons-material/CasesSharp'
 import AssignmentSharpIcon from '@mui/icons-material/AssignmentSharp'
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import CalendarMonthSharpIcon from '@mui/icons-material/CalendarMonthSharp'
 
 import * as React from 'react'
+import { Link, Outlet } from 'react-router-dom'
 // import { useAppSelector } from '../../redux/store'
-import ProfileInfo from './profile.info.page'
 
 const data = [
-    { icon: <Home />, label: 'Home' },
-    { icon: <AccountBoxIcon />, label: 'Profile info' },
-    { icon: <AssignmentSharpIcon />, label: 'My Tasks' },
-    { icon: <CalendarMonthIcon />, label: 'My calendar' },
+    { icon: <BarChartSharpIcon />, label: 'Dashboard', to: '/dashboard' },
+    {
+        icon: <AccountBoxSharpIcon />,
+        label: 'Profile info',
+        to: '/profile-info',
+    },
+    {
+        icon: <CategorySharpIcon />,
+        label: 'Project Categories',
+        to: '/categories',
+    },
+    { icon: <CasesSharpIcon />, label: 'Projects', to: '/projects' },
+    {
+        icon: <AssignmentSharpIcon />,
+        label: 'To-do List',
+        to: '/to-do-list',
+    },
+    { icon: <CalendarMonthSharpIcon />, label: 'Calendar', to: '/calendar' },
 ]
-
-interface TabPanelProps {
-    children?: React.ReactNode
-    index: number
-    value: number
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props
-    const theme = useTheme()
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`vertical-tabpanel-${index}`}
-            aria-labelledby={`vertical-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box
-                    sx={
-                        {
-                            // backgroundColor: theme.palette.background.paper,
-                        }
-                    }
-                >
-                    {children}
-                </Box>
-            )}
-        </div>
-    )
-}
-
-function a11yProps(index: number) {
-    return {
-        id: `vertical-tab-${index}`,
-        'aria-controls': `vertical-tabpanel-${index}`,
-    }
-}
 
 const ProfilePage = () => {
     const theme = useTheme()
-
     // const user = useAppSelector((state) => state.userState.user)
 
     const [value, setValue] = React.useState(0)
+    const [showIconsOnly, setShowIconsOnly] = React.useState(false)
+    const tabsWidth = !showIconsOnly ? '56px' : '200px'
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue)
+    }
+
+    const toggleShowIconsOnly = () => {
+        setShowIconsOnly(!showIconsOnly)
     }
 
     return (
         <Container maxWidth="lg">
             <Box
                 sx={{
-                    mt: '4.25rem',
-                    flexGrow: 1,
+                    mt: '4rem',
                     display: 'flex',
                 }}
             >
@@ -84,14 +68,41 @@ const ProfilePage = () => {
                     sx={{
                         borderRight: 1,
                         borderColor: 'divider',
+                        width: tabsWidth,
+                        overflow: 'visible',
                     }}
                 >
+                    <Tab
+                        icon={
+                            showIconsOnly ? (
+                                <MenuSharpIcon />
+                            ) : (
+                                <ArrowBackIosSharp />
+                            )
+                        }
+                        onClick={toggleShowIconsOnly}
+                        //iconPosition="end"
+                        sx={{
+                            justifyContent: !showIconsOnly
+                                ? 'flex-start'
+                                : 'flex-end',
+                            gap: 1,
+                            minHeight: 0,
+                            textTransform: 'none',
+                            '&:hover': {
+                                backgroundColor: theme.palette.action.hover,
+                            },
+                        }}
+                    />
+                    <Divider />
                     {data.map((tab, index) => (
                         <Tab
                             key={index}
-                            label={tab.label}
+                            label={showIconsOnly ? tab.label : undefined}
                             icon={tab.icon}
                             iconPosition="start"
+                            component={Link}
+                            to={`/my-profile${tab.to}`}
                             sx={{
                                 justifyContent: 'flex-start',
                                 gap: 1,
@@ -101,28 +112,18 @@ const ProfilePage = () => {
                                     backgroundColor: theme.palette.action.hover,
                                 },
                             }}
-                            {...a11yProps(index)}
                         />
                     ))}
                 </Tabs>
-                {data.map((tab, index) => (
-                    <TabPanel key={index} value={value} index={index}>
-                        {(() => {
-                            switch (index) {
-                                case 0:
-                                    return 'Home'
-                                case 1:
-                                    return <ProfileInfo />
-                                case 2:
-                                    return 'Tasks'
-                                case 3:
-                                    return 'Calendar'
-                                default:
-                                    return `Item ${index + 1}`
-                            }
-                        })()}
-                    </TabPanel>
-                ))}
+                <Box
+                    sx={{
+                        p: { xs: '1rem', sm: '2rem' },
+                        borderRadius: 1,
+                        width: `calc(100% - ${tabsWidth})`,
+                    }}
+                >
+                    <Outlet />
+                </Box>
             </Box>
         </Container>
     )

@@ -33,7 +33,6 @@ const Header = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            // window.location.href = '/login';
             navigate('/login')
         }
 
@@ -71,7 +70,7 @@ const Header = () => {
                                 <LoadingButton
                                     onClick={() => navigate('/login')}
                                 >
-                                    Login
+                                    Log In
                                 </LoadingButton>
                                 <LoadingButtonPrimary
                                     sx={{
@@ -89,12 +88,12 @@ const Header = () => {
                                     onClick={onLogoutHandler}
                                     loading={isLoading}
                                 >
-                                    Logout
+                                    Log Out
                                 </LoadingButton>
                                 <Box sx={{ mr: 2 }}>
                                     <Tooltip
-                                        title="Profile"
-                                        onClick={() => navigate('/profile')}
+                                        title="My Account"
+                                        onClick={() => navigate('/my-profile')}
                                     >
                                         <IconButton sx={{ p: 0 }}>
                                             <Avatar
@@ -116,8 +115,8 @@ const Header = () => {
                                 Admin
                             </LoadingButton>
                         )}
+                        <ThemeSwitchButton />
                     </Box>
-                    <ThemeSwitchButton />
                 </Toolbar>
             </Container>
         </AppBar>

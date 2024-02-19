@@ -23,10 +23,10 @@ export const createUserSchema = object({
 
 export const editUserSchema = object({
     body: object({
-      name: string(),
-      age: number(),
+        name: string(),
+        age: number({invalid_type_error: "Age must be a number"}).lte(100).gt(5),
     }),
-});
+})
 
 export const loginUserSchema = object({
     body: object({
@@ -41,16 +41,16 @@ export const loginUserSchema = object({
 
 export const verifyEmailSchema = object({
     params: object({
-      verificationCode: string(),
+        verificationCode: string(),
     }),
-});
+})
 
 export type CreateUserInput = Omit<
-TypeOf<typeof createUserSchema>['body'],
-'passwordConfirm'
+    TypeOf<typeof createUserSchema>['body'],
+    'passwordConfirm'
 >
 
 export type EditUserInput = TypeOf<typeof editUserSchema>['body']
 
 export type LoginUserInput = TypeOf<typeof loginUserSchema>['body']
-export type VerifyEmailInput = TypeOf<typeof verifyEmailSchema>['params'];
+export type VerifyEmailInput = TypeOf<typeof verifyEmailSchema>['params']
