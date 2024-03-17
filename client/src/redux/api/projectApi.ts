@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { IProject } from './types'
+import { IProject, IProjectAPI } from './types'
+import { DateTime } from 'luxon'
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string
 
@@ -67,8 +68,19 @@ export const projectApi = createApi({
                           { type: 'Projects', id: 'LIST' },
                       ]
                     : [{ type: 'Projects', id: 'LIST' }],
-            transformResponse: (results: { data: { projects: IProject[] } }) =>
-                results.data.projects,
+            transformResponse: (results: {
+                data: { projects: IProjectAPI[] }
+            }): IProject[] =>
+                results.data.projects.map((project) => ({
+                    id: project.id,
+                    projectTitle: project.projectTitle,
+                    description: project.description,
+                    status: project.status,
+                    dueDate: DateTime.fromISO(project.dueDate),
+                    created_at: DateTime.fromISO(project.created_at),
+                    updated_at: DateTime.fromISO(project.updated_at),
+                    projectCategory: project.projectCategory,
+                })),
         }),
 
         deleteProject: builder.mutation<void, number>({

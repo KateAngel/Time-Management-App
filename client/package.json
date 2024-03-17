@@ -30,6 +30,7 @@
         "@stitches/react": "^1.2.8",
         "@types/jest": "^29.5.11",
         "@types/node": "^20.10.6",
+        "dayjs": "^1.11.10",
         "luxon": "^3.4.4",
         "react": "^18.2.0",
         "react-cookie": "^7.0.0",

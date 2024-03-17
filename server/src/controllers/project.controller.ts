@@ -5,7 +5,7 @@ import {
   GetProjectInput,
   UpdateProjectInput,
 } from '../schemas/project.schema';
-import { createProject, findProjects, getProject } from '../services/project.service';
+import { createProject, findProjects, getAllProjects, getProject } from '../services/project.service';
 import { findUserById } from '../services/user.service';
 import AppError from '../utils/appError';
 
@@ -17,7 +17,7 @@ export const createProjectHandler = async (
 ) => {
   try {
     const user = await findUserById(res.locals.user.id as string);
-
+      console.log('req.body:', req.body);
     const project = await createProject(req.body, user!);
 
     res.status(201).json({
@@ -33,6 +33,7 @@ export const createProjectHandler = async (
         message: 'Project with that title already exist',
       });
     }
+    console.log(err);
     next(err);
   }
 };
@@ -43,7 +44,7 @@ export const getProjectHandler = async (
   next: NextFunction
 ) => {
   try {
-    const project = await getProject(req.params.projectId);
+    const project = await getProject(parseInt(req.params.projectId));
 
     if (!project) {
       return next(new AppError(404, 'Project with that ID not found'));
@@ -53,6 +54,26 @@ export const getProjectHandler = async (
       status: 'success',
       data: {
         project,
+      },
+    });
+  } catch (err: any) {
+    next(err);
+  }
+};
+
+export const getAllProjectsHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const projects = await getAllProjects();
+
+    res.status(200).json({
+      status: 'success',
+      results: projects.length,
+      data: {
+        projects,
       },
     });
   } catch (err: any) {
@@ -86,7 +107,7 @@ export const updateProjectHandler = async (
   next: NextFunction
 ) => {
   try {
-    const project = await getProject(req.params.projectId);
+    const project = await getProject(parseInt(req.params.projectId));
 
     if (!project) {
       return next(new AppError(404, 'Project with that ID not found'));
@@ -104,6 +125,7 @@ export const updateProjectHandler = async (
     });
   } catch (err: any) {
     next(err);
+    console.log(err);
   }
 };
 
@@ -113,7 +135,7 @@ export const deleteProjectHandler = async (
   next: NextFunction
 ) => {
   try {
-    const project = await getProject(req.params.projectId);
+    const project = await getProject(parseInt(req.params.projectId));
 
     if (!project) {
       return next(new AppError(404, 'Project with that ID not found'));

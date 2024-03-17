@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class AddedUserEntity1707847086929 implements MigrationInterface {
-    name = 'AddedUserEntity1707847086929'
+    name = 'AlterCategoryAddTimestamp1707847086929'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "project_category" ADD "created_at" TIMESTAMP NOT NULL DEFAULT now()`);

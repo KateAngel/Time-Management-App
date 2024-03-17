@@ -1,29 +1,14 @@
 // MyProjects.tsx
 import { useState, useEffect } from 'react'
-import {
-    Box,
-    Breadcrumbs,
-    Container,
-    Divider,
-    Grid,
-    Typography,
-    IconButton,
-    Tooltip,
-    useMediaQuery,
-} from '@mui/material'
+import { Box, Container, Divider, Grid, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import AddIcon from '@mui/icons-material/Add'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { toast } from 'react-toastify'
-
-import {
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-} from '../../styles/taskStyles'
+import { DateTime } from 'luxon'
 import FullScreenLoader from '../../components/FullScreenLoader'
-import ProjectForm from '../../components/ProjectForm'
+import ActionButtons from '../../components/profile/ActionButtons'
+import DeleteConfirmationDialog from '../../components/profile/DeleteConfirmationDialog'
+import ProjectForm from '../../components/profile/projects/ProjectForm'
+import ProjectItem from '../../components/profile/projects/ProjectItem'
 import { IProject } from '../../redux/api/types'
 import {
     useGetAllProjectsQuery,
@@ -54,6 +39,11 @@ const MyProjects = () => {
         null,
     )
 
+    const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false)
+
+    const [filterText, setFilterText] = useState<string>('')
+    const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+
     const openProjectForm = (project: IProject | null = null) => {
         setSelectedProject(project)
         setShowProjectForm(true)
@@ -65,7 +55,7 @@ const MyProjects = () => {
     }
 
     const handleSaveProject = (editedProject: IProject) => {
-        const now = new Date()
+        const now = DateTime.now()
         editedProject.updated_at = now
 
         if (selectedProject) {
@@ -78,8 +68,42 @@ const MyProjects = () => {
     }
 
     const handleDelete = (projectId: number) => {
-        deleteProject(projectId)
+        setSelectedProject(
+            projects?.find((project) => project.id === projectId) || null,
+        )
+
+        setDeleteConfirmation(true)
     }
+
+    const handleConfirmDelete = () => {
+        deleteProject(selectedProject!.id)
+        setDeleteConfirmation(false)
+    }
+
+    const handleCancelDelete = () => {
+        setDeleteConfirmation(false)
+    }
+
+    const filterProjects = (text: string, selectedFilters: string[]) => {
+        setFilterText(text)
+        setSelectedFilters(selectedFilters)
+    }
+
+    const filteredProjects = projects?.filter((project) => {
+        const matchesFilterText =
+            project.projectTitle
+                .toLowerCase()
+                .includes(filterText.toLowerCase()) ||
+            project.description.toLowerCase().includes(filterText.toLowerCase())
+
+        const matchesFilters =
+            selectedFilters.length === 0 ||
+            selectedFilters.some((filter) =>
+                project.projectTitle.includes(filter),
+            )
+
+        return matchesFilterText && matchesFilters
+    })
 
     interface ErrorType {
         data: {
@@ -116,14 +140,14 @@ const MyProjects = () => {
         <Container maxWidth="lg">
             <Box>
                 <TabTitleTypography>Projects</TabTitleTypography>
-                <Tooltip title="Add Project" placement="top-start">
-                    <IconButton
-                        onClick={() => openProjectForm()}
-                        sx={{ backgroundColor: theme.palette.secondary.main }}
-                    >
-                        <AddIcon />
-                    </IconButton>
-                </Tooltip>
+                <ActionButtons
+                    openForm={() => openProjectForm()}
+                    filterItems={filterProjects}
+                    filterOptions={
+                        projects?.map((project) => project.projectTitle) || []
+                    }
+                    tooltipTitle="Add Project"
+                />
                 {showProjectForm && (
                     <ProjectForm
                         project={selectedProject || undefined}
@@ -142,97 +166,42 @@ const MyProjects = () => {
                         direction={isXSScreen ? 'column' : 'row'}
                         alignItems={isXSScreen ? 'center' : 'stretch'}
                     >
-                        {projects?.map((project: IProject) => (
-                            <Grid
-                                item
-                                xs={12}
-                                sm={6}
-                                md={4}
-                                lg={3}
-                                key={project.id}
-                                sx={{
-                                    width: {
-                                        sx: '100%',
-                                        sm: '50%',
-                                        md: '33.33%',
-                                        lg: '25%',
-                                    },
-                                    minWidth: '200px',
-                                }}
-                            >
-                                <Accordion key={project.id}>
-                                    <AccordionSummary>
-                                        <Breadcrumbs
-                                            separator="›"
-                                            aria-label="breadcrumb"
-                                            sx={{
-                                                width: '88%',
-                                                fontSize: '1.5rem',
-                                            }}
-                                        >
-                                            <Typography>
-                                                {project.projectCategory}
-                                            </Typography>
-                                            <Typography>
-                                                {project.projectTitle}
-                                            </Typography>
-                                        </Breadcrumbs>
-                                        <Typography>
-                                            {project.status}
-                                        </Typography>
-                                        <Tooltip title="Edit">
-                                            <IconButton
-                                                onClick={() => {
-                                                    openProjectForm(project)
-                                                }}
-                                            >
-                                                <EditIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title="Delete">
-                                            <IconButton
-                                                onClick={() =>
-                                                    handleDelete(project.id)
-                                                }
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Typography>
-                                            {project.description}
-                                        </Typography>
-                                        <Typography>
-                                            Due Date:{' '}
-                                            {project.dueDate?.toLocaleString(
-                                                'en-US',
-                                                {
-                                                    year: 'numeric',
-                                                    month: 'numeric',
-                                                    day: 'numeric',
-                                                    hour: 'numeric',
-                                                    minute: 'numeric',
-                                                    second: 'numeric',
-                                                },
-                                            ) || ''}
-                                        </Typography>
-                                        <Typography>
-                                            Created:{' '}
-                                            {project.created_at.toLocaleString()}
-                                        </Typography>
-                                        <Typography>
-                                            Last Edited:{' '}
-                                            {project.updated_at.toLocaleString() ||
-                                                ''}
-                                        </Typography>
-                                    </AccordionDetails>
-                                </Accordion>
-                            </Grid>
-                        ))}
+                        {filteredProjects &&
+                            filteredProjects.length > 0 &&
+                            [...filteredProjects]
+                                .sort((a, b) =>
+                                    a.projectTitle.localeCompare(
+                                        b.projectTitle,
+                                    ),
+                                )
+                                .map((project: IProject) => (
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        md={4}
+                                        lg={3}
+                                        key={project.id}
+                                    >
+                                        <ProjectItem
+                                            project={project}
+                                            onEdit={() =>
+                                                openProjectForm(project)
+                                            }
+                                            onDelete={() =>
+                                                handleDelete(project.id)
+                                            }
+                                        />
+                                    </Grid>
+                                ))}
                     </Grid>
                 </Box>
             </Box>
+            <DeleteConfirmationDialog
+                open={deleteConfirmation}
+                onClose={handleCancelDelete}
+                onConfirm={handleConfirmDelete}
+            />
         </Container>
     )
 }

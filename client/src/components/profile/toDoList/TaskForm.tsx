@@ -14,7 +14,7 @@ import { useTheme } from '@mui/material/styles'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Cancel'
-import { ITask } from '../redux/api/types'
+import { ITask } from '../../../redux/api/types'
 
 interface TaskFormProps {
     task?: ITask

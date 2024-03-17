@@ -1,27 +1,14 @@
 // categories.tsx
 import { useState, useEffect } from 'react'
-import {
-    Box,
-    Card,
-    CardActionArea,
-    CardHeader,
-    CardContent,
-    Container,
-    Divider,
-    Grid,
-    Typography,
-    IconButton,
-    Tooltip,
-    useMediaQuery,
-} from '@mui/material'
+import { Box, Container, Divider, Grid, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import AddIcon from '@mui/icons-material/Add'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { toast } from 'react-toastify'
 
 import FullScreenLoader from '../../components/FullScreenLoader'
-import CategoryForm from '../../components/CategoryForm'
+import ActionButtons from '../../components/profile/ActionButtons'
+import DeleteConfirmationDialog from '../../components/profile/DeleteConfirmationDialog'
+import CategoryItem from '../../components/profile/categories/CategoryItem'
+import CategoryForm from '../../components/profile/categories/CategoryForm'
 import { ICategory } from '../../redux/api/types'
 import {
     useGetAllCategoriesQuery,
@@ -53,8 +40,13 @@ const ProjectCategories = () => {
         null,
     )
 
+    const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false)
+
+    const [filterText, setFilterText] = useState<string>('')
+    const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+
     const openCategoryForm = (category: ICategory | null = null) => {
-        setSelectedCategory(category)
+        setSelectedCategory(category || null)
         setShowCategoryForm(true)
     }
 
@@ -63,22 +55,58 @@ const ProjectCategories = () => {
         setSelectedCategory(null)
     }
 
-    const handleSaveCategory = async (editedCategory: ICategory) => {
+    const handleSaveCategory = (editedCategory: ICategory) => {
         const now = new Date()
         editedCategory.updated_at = now
 
         if (selectedCategory) {
             updateCategory(editedCategory)
         } else {
-            await addCategory(editedCategory)
+            addCategory(editedCategory)
         }
 
         closeCategoryForm()
     }
 
     const handleDelete = (categoryId: number) => {
-        deleteCategory(categoryId)
+        setSelectedCategory(
+            categories?.find((category) => category.id === categoryId) || null,
+        )
+
+        setDeleteConfirmation(true)
     }
+
+    const handleConfirmDelete = () => {
+        deleteCategory(selectedCategory!.id)
+        setDeleteConfirmation(false)
+    }
+
+    const handleCancelDelete = () => {
+        setDeleteConfirmation(false)
+    }
+
+    const filterCategories = (text: string, selectedFilters: string[]) => {
+        setFilterText(text)
+        setSelectedFilters(selectedFilters)
+    }
+
+    const filteredCategories = categories?.filter((category) => {
+        const matchesFilterText =
+            category.projectCategory
+                .toLowerCase()
+                .includes(filterText.toLowerCase()) ||
+            category.description
+                .toLowerCase()
+                .includes(filterText.toLowerCase())
+
+        const matchesFilters =
+            selectedFilters.length === 0 ||
+            selectedFilters.some((filter) =>
+                category.projectCategory.includes(filter),
+            )
+
+        return matchesFilterText && matchesFilters
+    })
 
     interface ErrorType {
         data: {
@@ -115,14 +143,16 @@ const ProjectCategories = () => {
         <Container maxWidth="lg">
             <Box>
                 <TabTitleTypography>Categories</TabTitleTypography>
-                <Tooltip title="Add Category" placement="top-start">
-                    <IconButton
-                        onClick={() => openCategoryForm()}
-                        sx={{ backgroundColor: theme.palette.secondary.main }}
-                    >
-                        <AddIcon />
-                    </IconButton>
-                </Tooltip>
+                <ActionButtons
+                    openForm={() => openCategoryForm()}
+                    filterItems={filterCategories}
+                    filterOptions={
+                        categories?.map(
+                            (category) => category.projectCategory,
+                        ) || []
+                    }
+                    tooltipTitle="Add Category"
+                />
                 {showCategoryForm && (
                     <CategoryForm
                         category={selectedCategory || undefined}
@@ -141,116 +171,42 @@ const ProjectCategories = () => {
                         direction={isXSScreen ? 'column' : 'row'}
                         alignItems={isXSScreen ? 'center' : 'stretch'}
                     >
-                        {categories?.map((category: ICategory) => (
-                            <Grid
-                                item
-                                xs={12}
-                                sm={6}
-                                md={4}
-                                lg={3}
-                                key={category.id}
-                                sx={{
-                                    width: {
-                                        sx: '100%',
-                                        sm: '50%',
-                                        md: '33.33%',
-                                        lg: '25%',
-                                    },
-                                    minWidth: '200px',
-                                }}
-                            >
-                                <Card
-                                    variant="outlined"
-                                    sx={{ height: '100%' }}
-                                >
-                                    <CardActionArea>
-                                        <CardHeader
-                                            action={
-                                                <div>
-                                                    <Tooltip
-                                                        title="Edit"
-                                                        placement="top-start"
-                                                    >
-                                                        <IconButton
-                                                            onClick={() => {
-                                                                openCategoryForm(
-                                                                    category,
-                                                                )
-                                                            }}
-                                                        >
-                                                            <EditIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                    <Tooltip
-                                                        title="Delete"
-                                                        placement="top-start"
-                                                    >
-                                                        <IconButton
-                                                            onClick={() =>
-                                                                handleDelete(
-                                                                    category.id,
-                                                                )
-                                                            }
-                                                        >
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                </div>
+                        {filteredCategories &&
+                            filteredCategories.length > 0 &&
+                            [...filteredCategories]
+                                .sort((a, b) =>
+                                    a.projectCategory.localeCompare(
+                                        b.projectCategory,
+                                    ),
+                                )
+                                .map((category: ICategory) => (
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={6}
+                                        md={4}
+                                        lg={3}
+                                        key={category.id}
+                                    >
+                                        <CategoryItem
+                                            category={category}
+                                            onEdit={() =>
+                                                openCategoryForm(category)
                                             }
-                                            title={category.projectCategory}
-                                            subheader={
-                                                <>
-                                                    Created: <br />
-                                                    {new Date(
-                                                        category.created_at,
-                                                    ).toLocaleString('en-US', {
-                                                        year: 'numeric',
-                                                        month: 'short',
-                                                        day: '2-digit',
-                                                    })}
-                                                </>
+                                            onDelete={() =>
+                                                handleDelete(category.id)
                                             }
-                                            sx={{
-                                                '& .MuiCardHeader-title': {
-                                                    fontSize: 32,
-                                                },
-                                                '& .MuiCardHeader-subheader': {
-                                                    fontSize: 12,
-                                                },
-                                            }}
                                         />
-                                        <Divider variant="middle" />
-                                        <CardContent>
-                                            <Typography
-                                                minHeight={75}
-                                                variant="body2"
-                                                //color="text.secondary"
-                                            >
-                                                {category.description}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="text.secondary"
-                                                fontSize={12}
-                                                textAlign="right"
-                                            >
-                                                Last Edited:{' '}
-                                                {new Date(
-                                                    category.updated_at,
-                                                ).toLocaleString('en-US', {
-                                                    year: 'numeric',
-                                                    month: 'short',
-                                                    day: '2-digit',
-                                                })}
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
-                            </Grid>
-                        ))}
+                                    </Grid>
+                                ))}
                     </Grid>
                 </Box>
             </Box>
+            <DeleteConfirmationDialog
+                open={deleteConfirmation}
+                onClose={handleCancelDelete}
+                onConfirm={handleConfirmDelete}
+            />
         </Container>
     )
 }

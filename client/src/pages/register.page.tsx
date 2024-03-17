@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'react-toastify'
 
 import FormInput from '../components/FormInput'
-import TypographyTitle from '../components/TypographyTitle'
+import TypographyTitle from '../styles/styled'
 import { useRegisterUserMutation } from '../redux/api/authApi'
 import { LoadingButtonPrimary as LoadingButton } from '../styles/loadingButtonStyled'
 import { LinkItem } from '../styles/styled'

@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 export interface IUser {
     email: string
     role: string
@@ -31,10 +33,16 @@ export interface IProject {
     projectTitle: string
     description: string
     status: string
-    dueDate?: Date
-    created_at: Date
-    updated_at: Date
-    projectCategory: string
+    dueDate?: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+    projectCategory: string | null
+}
+
+export type IProjectAPI = IProject & {
+    dueDate: string
+    created_at: string
+    updated_at: string
 }
 
 export interface ICategory {

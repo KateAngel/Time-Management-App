@@ -20,7 +20,7 @@ import {
     LoadingButtonHeader as LoadingButton,
     LoadingButtonPrimary,
 } from '../styles/loadingButtonStyled'
-import TypographyTitle from './TypographyTitle'
+import TypographyTitle from '../styles/styled'
 
 const Header = () => {
     const theme = useTheme()

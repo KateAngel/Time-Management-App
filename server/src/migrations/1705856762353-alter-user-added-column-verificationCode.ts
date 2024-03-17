@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
 export class AddedUserEntity1705856762353 implements MigrationInterface {
-    name = 'AddedUserEntity1705856762353'
+    name = 'AlterUserAddedColumnVerificationCode1705856762353'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(

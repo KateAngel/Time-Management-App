@@ -25,9 +25,9 @@ export const AccordionSummary = styled((props: AccordionSummaryProps) => (
         {...props}
     />
 ))(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.light,
-    color: theme.palette.secondary.contrastText,
-    minHeight: '1rem',
+    //backgroundColor: theme.palette.secondary.light,
+    //color: theme.palette.secondary.contrastText,
+    minHeight: '7rem',
 
     // flexDirection: 'row-reverse',
     '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
@@ -36,9 +36,6 @@ export const AccordionSummary = styled((props: AccordionSummaryProps) => (
     '& .MuiAccordionSummary-content': {
         marginLeft: theme.spacing(1),
         margin: '6px 0',
-    },
-    '& .MuiTypography-root': {
-        fontSize: '1.5rem',
     },
 }))
 

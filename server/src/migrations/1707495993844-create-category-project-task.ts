@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class AddedUserEntity1707495993844 implements MigrationInterface {
-    name = 'AddedUserEntity1707495993844'
+    name = 'CreateCategoryProjectTask1707495993844'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TYPE "public"."project_title_status_enum" AS ENUM('OPEN', 'IN_PROGRESS', 'DONE')`);
-        await queryRunner.query(`CREATE TABLE "project_title" ("id" SERIAL NOT NULL, "projectTitle" character varying NOT NULL, "description" character varying, "status" "public"."project_title_status_enum" NOT NULL DEFAULT 'OPEN', "dueDate" TIMESTAMP NOT NULL, "userId" uuid, "categoryId" integer, CONSTRAINT "PK_eb62a5643974c033968fd8b5eb2" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."project_title_status_enum" AS ENUM('Upcoming', 'In progress', 'Completed')`);
+        await queryRunner.query(`CREATE TABLE "project_title" ("id" SERIAL NOT NULL, "projectTitle" character varying NOT NULL, "description" character varying, "status" "public"."project_title_status_enum" NOT NULL DEFAULT 'Upcoming', "dueDate" TIMESTAMP NOT NULL, "userId" uuid, "categoryId" integer, CONSTRAINT "PK_eb62a5643974c033968fd8b5eb2" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "task" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "title" character varying NOT NULL, "description" character varying, "status" character varying NOT NULL DEFAULT 'OPEN', "dueDate" TIMESTAMP NOT NULL, "isCompleted" boolean NOT NULL, "isDeleted" boolean NOT NULL DEFAULT false, "categoryId" integer, "projectId" integer, "userId" uuid, CONSTRAINT "PK_fb213f79ee45060ba925ecd576e" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "project_category" ("id" SERIAL NOT NULL, "projectCategory" character varying NOT NULL, "description" character varying, "userId" uuid, CONSTRAINT "PK_826c5e0f45e35b5983c8379be7b" PRIMARY KEY ("id"))`);
         await queryRunner.query(`ALTER TABLE "project_title" ADD CONSTRAINT "FK_aa081bcf5454a6dfa5533fcea47" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);

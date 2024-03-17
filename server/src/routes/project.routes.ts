@@ -12,14 +12,14 @@ const router = express.Router()
 router.use(deserializeUser, requireUser)
 
 router
-    .route('/')
+    .route('/my-profile/projects')
     .post(createProjectHandler, validate(createProjectSchema))
     .get(getProjectsHandler)
 
 router
-    .route('/:projectId')
+    .route('/my-profile/projects/:projectId')
     .get(getProjectHandler)
-    //.patch(validate(updateProjectSchema), updateProjectHandler)
-   // .delete(validate(deleteProjectSchema), deleteProjectHandler)
+    .patch(updateProjectHandler)
+    .delete(deleteProjectHandler)
 
 export default router

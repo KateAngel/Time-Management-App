@@ -11,7 +11,7 @@ import { object, string, TypeOf } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import FormInput from '../components/FormInput'
-import TypographyTitle from '../components/TypographyTitle'
+import TypographyTitle from '../styles/styled'
 import { useLoginUserMutation } from '../redux/api/authApi'
 import { LoadingButtonPrimary as LoadingButton } from '../styles/loadingButtonStyled'
 import { LinkItem } from '../styles/styled'
@@ -106,6 +106,7 @@ const LoginPage = () => {
                         sx={{
                             p: { xs: '2rem', sm: '2rem' },
                             borderRadius: 1,
+                            //border: `1px solid ${theme.palette.divider}`,
                             backgroundColor: 'background.paper',
                         }}
                     >

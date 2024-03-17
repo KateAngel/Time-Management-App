@@ -12,7 +12,7 @@ import {
 import { toast } from 'react-toastify'
 import { useUpdateUserMutation } from '../../redux/api/userApi'
 import { useAppSelector } from '../../redux/store'
-import FormTextField from '../../components/FormTextfield'
+import FormTextField from '../../components/profile/profile_info/FormTextfield'
 import { LoadingButtonPrimary as LoadingButton } from '../../styles/loadingButtonStyled'
 import { TabTitleTypography } from '../../styles/profile.styles'
 
@@ -76,7 +76,6 @@ const ProfileInfo = () => {
                 autoComplete="off"
                 display="flex"
                 flexDirection="column"
-                //width="100%"
                 sx={{
                     gap: { xs: '1rem', md: '0rem' },
                 }}
@@ -96,7 +95,11 @@ const ProfileInfo = () => {
                     }}
                 >
                     <strong>Profile picture</strong>
-                    <Box width="70%" display="flex" justifyContent="center">
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        sx={{ width: { xs: '100%', md: '70%' } }}
+                    >
                         <Tooltip
                             title="Change picture"
                             placement="bottom-start"
@@ -149,42 +152,48 @@ const ProfileInfo = () => {
                     onChange={handleAgeChange}
                     disabled={!editing}
                 />
-                <Box
-                    display="flex"
-                    justifyContent="center"
-                    gap="1rem"
-                    mt="1rem"
-                    sx={{ ml: { xs: '0', md: '30%' } }}
-                >
-                    <Tooltip title="Edit personal info" placement="top-start">
-                        {!editing ? (
-                            <LoadingButton
-                                sx={{ p: 0 }}
-                                onClick={() => {
-                                    setEditing(true)
-                                }}
-                            >
-                                Edit
-                            </LoadingButton>
-                        ) : (
-                            <LoadingButton
-                                sx={{ p: 0 }}
-                                onClick={() => {
-                                    setEditing(false)
-                                }}
-                            >
-                                Cancel
-                            </LoadingButton>
-                        )}
-                    </Tooltip>
-                    <Tooltip title="Save changes" placement="top-start">
-                        <LoadingButton
-                            sx={{ p: 0 }}
-                            onClick={handleSaveChanges}
+                <Box maxWidth="50rem" width="100%">
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        gap="1rem"
+                        mt="1rem"
+                        maxWidth="50rem"
+                        sx={{ pl: { xs: '0', md: '30%' } }}
+                    >
+                        <Tooltip
+                            title="Edit personal info"
+                            placement="top-start"
                         >
-                            Save
-                        </LoadingButton>
-                    </Tooltip>
+                            {!editing ? (
+                                <LoadingButton
+                                    sx={{ p: 0 }}
+                                    onClick={() => {
+                                        setEditing(true)
+                                    }}
+                                >
+                                    Edit
+                                </LoadingButton>
+                            ) : (
+                                <LoadingButton
+                                    sx={{ p: 0 }}
+                                    onClick={() => {
+                                        setEditing(false)
+                                    }}
+                                >
+                                    Cancel
+                                </LoadingButton>
+                            )}
+                        </Tooltip>
+                        <Tooltip title="Save changes" placement="top-start">
+                            <LoadingButton
+                                sx={{ p: 0 }}
+                                onClick={handleSaveChanges}
+                            >
+                                Save
+                            </LoadingButton>
+                        </Tooltip>
+                    </Box>
                 </Box>
             </Box>
         </Container>

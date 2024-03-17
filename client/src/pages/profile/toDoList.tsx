@@ -13,7 +13,7 @@ import { useTheme } from '@mui/material/styles'
 import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
-import TaskForm from '../../components/TaskForm'
+import TaskForm from '../../components/profile/toDoList/TaskForm'
 import {
     Accordion,
     AccordionSummary,

@@ -45,7 +45,7 @@ export class ProjectCategory extends BaseEntity {
     tasks: Task[]
 }
 
-export interface Dprojectcategory {
+export interface DprojectCategory {
     id: number
     projectCategory: string
     description: string

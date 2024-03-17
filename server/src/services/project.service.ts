@@ -19,6 +19,10 @@ import {
     return await projectRepository.findOneBy({ id: projectId })
   }
   
+  export const getAllProjects = async () => {
+    return await projectRepository.find();
+  }
+
   export const findProjects = async (
     where: FindOptionsWhere<ProjectTitle > = {},
     select: FindOptionsSelect<ProjectTitle > = {},

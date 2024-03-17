@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { ICategory } from './types'
 
-const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string
+export const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string
 
 export const categoryApi = createApi({
     reducerPath: 'categoryApi',

@@ -19,7 +19,7 @@ export const createProjectSchema = object({
 
 const params = {
   params: object({
-    projectId: number(),
+    projectId: string(), // number() in database, but receiced as string from request
   }),
 }
 

@@ -1,6 +1,8 @@
 import {
     Entity,
     PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
     Column,
     BaseEntity,
     JoinColumn,
@@ -12,15 +14,24 @@ import { ProjectCategory } from './project.category.entity'
 import { User } from './user.entity'
 
 export enum ProjectStatus {
-    OPEN = 'OPEN',
-    IN_PROGRESS = 'IN_PROGRESS',
-    DONE = 'DONE',
+    UPCOMING = 'Upcoming',
+    IN_PROGRESS = 'In progress',
+    ON_HOLD = 'On hold',
+    COMPLETED = 'Completed',
+    CANCELLED = 'Cancelled',
+    REOPENED = 'Reopened',
 }
 
 @Entity()
 export class ProjectTitle extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
+    
+    @CreateDateColumn()
+    created_at: Date
+
+    @UpdateDateColumn()
+    updated_at: Date
 
     @Column()
     projectTitle: string
@@ -33,7 +44,7 @@ export class ProjectTitle extends BaseEntity {
     @Column({ 
         type: 'enum',
         enum: ProjectStatus,
-        default: ProjectStatus.OPEN })
+        default: ProjectStatus.UPCOMING, })
     status: ProjectStatus
 
     @Column()

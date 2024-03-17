@@ -49,10 +49,6 @@ export const Colors = (mode: PaletteMode) => ({
     info: '#0452b7',
     danger: 'hsl(356, 53%, 36%)',
     warning: 'hsl(59,31%,28%)',
-    ///////////////
-    // Solid Color
-    ///////////////
-    //white: '#fff',
     black: '#000',
     green: '#a4d037',
     yellow: '#fecd35',

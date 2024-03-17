@@ -1,4 +1,4 @@
-import { Box, Container, Divider, Tab, Tabs } from '@mui/material'
+import { Box, Container, Tab, Tabs } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import MenuSharpIcon from '@mui/icons-material/MenuSharp'
 import ArrowBackIosSharp from '@mui/icons-material/ArrowForwardIosSharp'
@@ -81,7 +81,6 @@ const ProfilePage = () => {
                             )
                         }
                         onClick={toggleShowIconsOnly}
-                        //iconPosition="end"
                         sx={{
                             justifyContent: !showIconsOnly
                                 ? 'flex-start'
@@ -89,12 +88,12 @@ const ProfilePage = () => {
                             gap: 1,
                             minHeight: 0,
                             textTransform: 'none',
+                            borderBottom: '1px solid',
                             '&:hover': {
                                 backgroundColor: theme.palette.action.hover,
                             },
                         }}
                     />
-                    <Divider />
                     {data.map((tab, index) => (
                         <Tab
                             key={index}

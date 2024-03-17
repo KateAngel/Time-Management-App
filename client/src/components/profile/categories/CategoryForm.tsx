@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid'
 import { useTheme } from '@mui/material/styles'
 import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Cancel'
-import { ICategory } from '../redux/api/types'
+import { ICategory } from '../../../redux/api/types'
 
 interface CategoryFormProps {
     category?: ICategory
@@ -49,6 +49,17 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         onCancel()
     }
 
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        const { name, value } = e.target
+
+        setEditedCategory((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }))
+    }
+
     return (
         <Dialog
             open={true}
@@ -70,7 +81,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                     <CancelIcon />
                 </Tooltip>
             </IconButton>
-            <DialogContent sx={{ minWidth: '400px', flexGrow: 1 }}>
+            <DialogContent sx={{ minWidth: '280px', flexGrow: 1 }}>
                 <Grid
                     container
                     spacing={4}
@@ -80,25 +91,23 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                     <Grid item xs={4}>
                         <TextField
                             type="text"
+                            name="projectCategory"
                             label="Category Title"
+                            variant="filled"
                             sx={{
-                                width: '50%',
+                                width: '100%',
                                 '& .MuiInputBase-root': {
                                     borderRadius: 0,
                                 },
                             }}
-                            value={editedCategory.projectCategory}
-                            onChange={(e) =>
-                                setEditedCategory({
-                                    ...editedCategory,
-                                    projectCategory: e.target.value,
-                                })
-                            }
+                            value={editedCategory.projectCategory || ''}
+                            onChange={handleInputChange}
                         />
                     </Grid>
                     <Grid item xs={8}>
                         <TextField
                             type="text"
+                            name="description"
                             label="Category Description"
                             variant="filled"
                             multiline
@@ -110,12 +119,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                                 },
                             }}
                             value={editedCategory.description}
-                            onChange={(e) =>
-                                setEditedCategory({
-                                    ...editedCategory,
-                                    description: e.target.value,
-                                })
-                            }
+                            onChange={handleInputChange}
                         />
                     </Grid>
                 </Grid>
