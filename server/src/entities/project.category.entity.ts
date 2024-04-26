@@ -41,8 +41,8 @@ export class ProjectCategory extends BaseEntity {
     })
     projects: ProjectTitle[]
 
-    @OneToMany((_type) => Task, (task) => task.category, { eager: true })
-    tasks: Task[]
+    // @OneToMany((_type) => Task, (task) => task.category, { eager: true })
+    // tasks: Task[]
 }
 
 export interface DprojectCategory {

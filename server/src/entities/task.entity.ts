@@ -13,9 +13,12 @@ import { ProjectCategory } from './project.category.entity'
 import { ProjectTitle } from './project.entity'
 
 export enum TaskStatus {
-    OPEN = 'OPEN',
-    IN_PROGRESS = 'IN_PROGRESS',
-    DONE = 'DONE',
+    UPCOMING = 'Upcoming',
+    IN_PROGRESS = 'In progress',
+    ON_HOLD = 'On hold',
+    COMPLETED = 'Completed',
+    CANCELLED = 'Cancelled',
+    REOPENED = 'Reopened',
 }
 
 @Entity()
@@ -29,21 +32,24 @@ export class Task extends Model {
     })
     description!: string
 
-    @Column({ default: TaskStatus.OPEN })
+    @Column({
+        type: 'enum',
+        enum: TaskStatus,
+        default: TaskStatus.UPCOMING })
     status: TaskStatus
 
     @Column()
-    dueDate: Date
+    dueDate?: Date
 
-    @Column()
+    @Column({ default: false })
     isCompleted!: boolean
 
     @Column({ default: false })
     isDeleted: boolean
 
-    @ManyToOne((_type) => ProjectCategory, (project) => project.tasks, { eager: false })
-    @JoinColumn()
-    category: ProjectCategory
+    // @ManyToOne((_type) => ProjectCategory, (project) => project.tasks, { eager: false })
+    // @JoinColumn()
+    // category: ProjectCategory
 
     @ManyToOne((_type) => ProjectTitle, (project) => project.tasks, {
         eager: false,

@@ -1,50 +1,34 @@
-import { object, string, TypeOf, z } from 'zod';
+import { object, string, TypeOf, z, ZodSchema } from 'zod'
 import { TaskStatus } from '../entities/task.entity'
 import { ProjectTitle } from '../entities/project.entity'
 import { ProjectCategory } from '../entities/project.category.entity'
+import { NextFunction, Request, Response } from 'express'
+import { idSchema, projectTitleSchema, taskSchema } from './base.schemas'
 
 export const createTaskSchema = object({
-  body: object({
-    title: string({
-      required_error: 'Title is required',
-    }),
-    description: string(),
-    status: z.optional(z.nativeEnum(TaskStatus)),
-    dueDate: z.coerce.date({
-      required_error: 'Due Date is required',
-    }),
-    category: z.instanceof(ProjectCategory),
-    project: z.instanceof(ProjectTitle),
-  }),
-});
+    body: taskSchema,
+})
 
 const params = {
-  params: object({
-    taskId: string(),
-  }),
-};
+    params: object({
+        taskId: string(),
+    }),
+}
 
 export const getTaskSchema = object({
-  ...params,
-});
+    ...params,
+})
 
 export const updateTaskSchema = object({
-  ...params,
-  body: object({
-    title: string(),
-    description: string(),
-    status: z.optional(z.nativeEnum(TaskStatus)),
-    dueDate: z.coerce.date(),
-    category: z.instanceof(ProjectCategory),
-    project: z.instanceof(ProjectTitle),
-  }).partial(),
-});
+    ...params,
+    body: taskSchema,
+})
 
 export const deleteTaskSchema = object({
-  ...params,
-});
+    ...params,
+})
 
-export type CreateTaskInput = TypeOf<typeof createTaskSchema>['body'];
-export type GetTaskInput = TypeOf<typeof getTaskSchema>['params'];
-export type UpdateTaskInput = TypeOf<typeof updateTaskSchema>;
-export type DeleteTaskInput = TypeOf<typeof deleteTaskSchema>['params'];
+export type CreateTaskInput = TypeOf<typeof createTaskSchema>['body']
+export type GetTaskInput = TypeOf<typeof getTaskSchema>['params']
+export type UpdateTaskInput = TypeOf<typeof updateTaskSchema>
+export type DeleteTaskInput = TypeOf<typeof deleteTaskSchema>['params']

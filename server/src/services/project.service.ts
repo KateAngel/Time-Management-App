@@ -12,15 +12,43 @@ import {
   const projectRepository = AppDataSource.getRepository(ProjectTitle )
   
   export const createProject = async (input: Partial<ProjectTitle >, user: User) => {
-    return await projectRepository.save(projectRepository.create({ ...input, user }));
+    const project = projectRepository.create({ ...input, user });
+    return await projectRepository.save(project);
+    //return await projectRepository.save(projectRepository.create({ ...input, user }));
   }
   
   export const getProject  = async (projectId: number) => {
-    return await projectRepository.findOneBy({ id: projectId })
+
+    const project = await projectRepository.findOne({ where: { id: projectId }, relations: [ 'category' ]});
+
+    return project;
+    // const projectData = await projectRepository
+    //         .createQueryBuilder("project")
+    //         .leftJoinAndSelect("project.category", "category")
+    //         .where("project.id = :projectId", { projectId })
+    //         .findOne();
+
+    // // Check if projectData is null
+    // if (!projectData) {
+    //     return { status: 'fail', message: 'Project not found' };
+    // }
+
+    // // Format the project data
+    // const project = {
+    //     id: projectData.id,
+    //     projectTitle: projectData.projectTitle,
+    //     description: projectData.description,
+    //     status: projectData.status,
+    //     dueDate: projectData.dueDate,
+    //     created_at: projectData.created_at,
+    //     updated_at: projectData.updated_at,
+    //   category: projectData.category
+    // };
+    // return project;
   }
   
   export const getAllProjects = async () => {
-    return await projectRepository.find();
+    return await projectRepository.find({ relations: [ 'category' ] })
   }
 
   export const findProjects = async (
@@ -31,6 +59,25 @@ import {
     return await projectRepository.find({
       where,
       select,
-      relations,
+      relations: [ 'category' ],
     })
+  //   const projectsData = await projectRepository
+  //   .createQueryBuilder("project")
+  //   .leftJoinAndSelect("project.category", "category")
+  //   .where(where)
+  //   .getMany();
+
+  // // Format the projects data
+  // const projects = projectsData.map(projectData => ({
+  //   id: projectData.id,
+  //   projectTitle: projectData.projectTitle,
+  //   description: projectData.description,
+  //   status: projectData.status,
+  //   dueDate: projectData.dueDate,
+  //   created_at: projectData.created_at,
+  //   updated_at: projectData.updated_at,
+  //   category: projectData.category
+  // }));
+
+  //return projects;
   }

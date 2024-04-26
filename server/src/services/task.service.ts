@@ -2,23 +2,25 @@ import {
     FindOptionsRelations,
     FindOptionsSelect,
     FindOptionsWhere,
-    Relation,
-    RelationOptions,
   } from 'typeorm';
-  import { Task } from '../entities/task.entity';
-  import { User } from '../entities/user.entity';
-  import { AppDataSource } from '../utils/data-source';
-  
-  const taskRepository = AppDataSource.getRepository(Task );
-  
-  export const createTask = async (input: Partial<Task >, user: User) => {
-    return await taskRepository.save(taskRepository.create({ ...input, user }));
+  import { Task } from '../entities/task.entity'
+  import { User } from '../entities/user.entity'
+  import { AppDataSource } from '../utils/data-source'
+
+  const taskRepository = AppDataSource.getRepository(Task )
+
+  export const createTask = async (task: Partial<Task>) => {
+    return await taskRepository.save(taskRepository.create(task))
   };
-  
+
   export const getTask  = async (taskId: string) => {
-    return await taskRepository.findOneBy({ id: taskId });
+    return await taskRepository.findOne({ where: { id: taskId }, relations: [ 'project', 'project.category' ] })
   };
-  
+
+  export const getAllTasks = async () => {
+    return await taskRepository.find({ relations: [ 'project', 'project.category' ] })
+  }
+
   export const findTasks = async (
     where: FindOptionsWhere<Task > = {},
     select: FindOptionsSelect<Task > = {},
@@ -27,6 +29,6 @@ import {
     return await taskRepository.find({
       where,
       select,
-      relations,
-    });
-  };
+      relations: [ 'project', 'project.category' ],
+    })
+  }

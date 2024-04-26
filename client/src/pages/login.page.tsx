@@ -1,6 +1,6 @@
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Container, Typography } from '@mui/material'
+import { Box, Container, Typography, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 import { useEffect } from 'react'
@@ -30,6 +30,7 @@ export type LoginInput = TypeOf<typeof loginSchema>
 
 const LoginPage = () => {
     const theme = useTheme()
+    const isSMScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
     const methods = useForm<LoginInput>({
         resolver: zodResolver(loginSchema),
@@ -94,63 +95,83 @@ const LoginPage = () => {
                 height: '100vh',
             }}
         >
-            <Box>
+            <Box
+                display="flex"
+                flexDirection={isSMScreen ? 'column' : 'row'}
+                sx={{
+                    borderRadius: 1,
+                    border: isSMScreen
+                        ? 'none'
+                        : `1px solid ${theme.palette.divider}`,
+                    backgroundColor: isSMScreen
+                        ? 'background.paper'
+                        : 'inherit',
+                }}
+            >
+                <Box
+                    maxWidth={isSMScreen ? 'auto' : '25rem'}
+                    sx={{
+                        p: { xs: '2rem', sm: '3rem' },
+                    }}
+                >
+                    <TypographyTitle
+                        sx={{
+                            fontSize: { xs: '1rem' },
+                            mb: 2,
+                        }}
+                    />
+                    <Typography
+                        textAlign="center"
+                        component="h1"
+                        sx={{
+                            color: 'primary.main',
+                            fontWeight: 600,
+                            fontSize: { xs: '1rem', md: '2rem' },
+                            mb: 2,
+                            letterSpacing: 1,
+                        }}
+                    >
+                        Welcome back
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        component="h2"
+                        sx={{
+                            color: 'text.secondary',
+                            fontSize: '0.9rem',
+                            mb: 2,
+                        }}
+                    >
+                        By logging in you accept our ridiculously long terms
+                        that you didn&apos;t bother to read
+                    </Typography>
+                </Box>
                 <FormProvider {...methods}>
                     <Box
                         component="form"
                         onSubmit={handleSubmit(onSubmitHandler)}
                         noValidate
                         autoComplete="off"
-                        maxWidth="25rem"
+                        maxWidth={isSMScreen ? 'auto' : '25rem'}
                         width="100%"
                         sx={{
-                            p: { xs: '2rem', sm: '2rem' },
-                            borderRadius: 1,
+                            p: { xs: '2rem', sm: '3rem' },
+                            //borderRadius: 1,
                             //border: `1px solid ${theme.palette.divider}`,
                             backgroundColor: 'background.paper',
                         }}
                     >
-                        <TypographyTitle
-                            sx={{
-                                fontSize: { xs: '1rem' },
-                                mb: 2,
-                            }}
-                        />
-                        <Typography
-                            textAlign="center"
-                            component="h1"
-                            sx={{
-                                color: 'primary.main',
-                                fontWeight: 600,
-                                fontSize: { xs: '1rem', md: '2rem' },
-                                mb: 2,
-                                letterSpacing: 1,
-                            }}
-                        >
-                            Welcome back
-                        </Typography>
-                        <Typography
-                            variant="body1"
-                            component="h2"
-                            sx={{
-                                color: 'text.secondary',
-                                fontSize: '0.9rem',
-                                mb: 2,
-                            }}
-                        >
-                            By logging in you accept our ridiculously long terms
-                            that you didn&apos;t bother to read
-                        </Typography>
-
                         <FormInput
                             name="email"
                             label="Email Address"
                             type="email"
+                            //placeholder="email"
                         />
                         <FormInput
                             name="password"
                             label="Password"
                             type="password"
+                            //placeholder="password"
                         />
 
                         <LoadingButton

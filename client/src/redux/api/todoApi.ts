@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { ITask } from './types'
+import { ITask, ITaskAPI, ITaskCreate, ITaskUpdate } from './types'
+import { DateTime } from 'luxon'
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string
 
@@ -10,13 +11,23 @@ export const todoApi = createApi({
     }),
     tagTypes: ['Tasks'],
     endpoints: (builder) => ({
-        addTask: builder.mutation<ITask, Partial<ITask>>({
+        addTask: builder.mutation<ITask, ITask>({
             query(task) {
+                console.log('Created Task:', task)
+
+                const transformedTask: ITaskCreate = {
+                    title: task.title,
+                    description: task.description,
+                    status: task.status,
+                    dueDate: task.dueDate,
+                    projectId: task.project.id,
+                }
+
                 return {
-                    url: 'to-do-list/add',
+                    url: 'my-profile/to-do-list',
                     method: 'POST',
                     credentials: 'include',
-                    body: task,
+                    body: transformedTask,
                 }
             },
             invalidatesTags: [{ type: 'Tasks', id: 'LIST' }],
@@ -24,13 +35,23 @@ export const todoApi = createApi({
                 result.data.task,
         }),
 
-        updateTask: builder.mutation<ITask, Partial<ITask>>({
+        updateTask: builder.mutation<ITask, ITask>({
             query(task) {
+                console.log('Updating Task:', task)
+
+                const transformedTask: ITaskUpdate = {
+                    title: task.title,
+                    description: task.description,
+                    status: task.status,
+                    dueDate: task.dueDate,
+                    projectId: task.project.id,
+                }
+
                 return {
-                    url: `to-do-list/update/${task.id}`,
+                    url: `my-profile/to-do-list/${task.id}`,
                     method: 'PATCH',
                     credentials: 'include',
-                    body: task,
+                    body: transformedTask,
                 }
             },
             invalidatesTags: (result, error, { id }) => [{ type: 'Tasks', id }],
@@ -41,7 +62,7 @@ export const todoApi = createApi({
         getTask: builder.query<ITask, string>({
             query(id) {
                 return {
-                    url: `to-do-list/${id}`,
+                    url: `my-profile/to-do-list/${id}`,
                     credentials: 'include',
                 }
             },
@@ -51,7 +72,7 @@ export const todoApi = createApi({
         getAllTasks: builder.query<ITask[], void>({
             query() {
                 return {
-                    url: 'to-do-list/',
+                    url: 'my-profile/to-do-list/',
                     credentials: 'include',
                 }
             },
@@ -65,20 +86,34 @@ export const todoApi = createApi({
                           { type: 'Tasks', id: 'LIST' },
                       ]
                     : [{ type: 'Tasks', id: 'LIST' }],
-            transformResponse: (results: { data: { tasks: ITask[] } }) =>
-                results.data.tasks,
+            transformResponse: (results: {
+                data: { tasks: ITaskAPI[] }
+            }): ITask[] =>
+                results.data.tasks.map((task) => ({
+                    id: task.id,
+                    title: task.title,
+                    description: task.description,
+                    status: task.status,
+                    dueDate: task.dueDate
+                        ? DateTime.fromISO(task.dueDate)
+                        : undefined,
+                    created_at: DateTime.fromISO(task.created_at),
+                    updated_at: DateTime.fromISO(task.updated_at),
+                    project: task.project,
+                    //category: task.category,
+                })),
+
+            //     async onQueryStarted(args, { dispatch, queryFulfilled }) {
+            //         try {
+            //             const { task } = await queryFulfilled
+            //             dispatch(taskState(task))
+            //         } catch (error) {}
+            //     },
         }),
-        //     async onQueryStarted(args, { dispatch, queryFulfilled }) {
-        //         try {
-        //             const { task } = await queryFulfilled
-        //             dispatch(taskState(task))
-        //         } catch (error) {}
-        //     },
-        // }),
-        deleteTask: builder.mutation<void, number>({
+        deleteTask: builder.mutation<void, string>({
             query(id) {
                 return {
-                    url: `to-do-list/delete/${id}`,
+                    url: `my-profile/to-do-list/${id}`,
                     method: 'DELETE',
                     credentials: 'include',
                 }

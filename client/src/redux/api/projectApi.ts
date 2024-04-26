@@ -41,7 +41,7 @@ export const projectApi = createApi({
                 result.data.project,
         }),
 
-        getProject: builder.query<IProject, string>({
+        getProject: builder.query<IProject, number>({
             query(id) {
                 return {
                     url: `my-profile/projects/${id}`,
@@ -49,6 +49,8 @@ export const projectApi = createApi({
                 }
             },
             providesTags: (_result, _error, id) => [{ type: 'Projects', id }],
+            transformResponse: (result: { data: { project: IProject } }) =>
+                result.data.project,
         }),
 
         getAllProjects: builder.query<IProject[], void>({
@@ -58,6 +60,7 @@ export const projectApi = createApi({
                     credentials: 'include',
                 }
             },
+
             providesTags: (result) =>
                 result
                     ? [
@@ -76,10 +79,12 @@ export const projectApi = createApi({
                     projectTitle: project.projectTitle,
                     description: project.description,
                     status: project.status,
-                    dueDate: DateTime.fromISO(project.dueDate),
+                    dueDate: project.dueDate
+                        ? DateTime.fromISO(project.dueDate)
+                        : undefined,
                     created_at: DateTime.fromISO(project.created_at),
                     updated_at: DateTime.fromISO(project.updated_at),
-                    projectCategory: project.projectCategory,
+                    category: project.category,
                 })),
         }),
 

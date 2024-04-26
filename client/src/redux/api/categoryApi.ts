@@ -40,7 +40,7 @@ export const categoryApi = createApi({
                 result.data.category,
         }),
 
-        getCategory: builder.query<ICategory, string>({
+        getCategory: builder.query<ICategory, number>({
             query(id) {
                 return {
                     url: `my-profile/categories/${id}`,
@@ -48,6 +48,8 @@ export const categoryApi = createApi({
                 }
             },
             providesTags: (_result, _error, id) => [{ type: 'Categories', id }],
+            transformResponse: (result: { data: { category: ICategory } }) =>
+                result.data.category,
         }),
 
         getAllCategories: builder.query<ICategory[], void>({
@@ -91,6 +93,7 @@ export const categoryApi = createApi({
 export const {
     useAddCategoryMutation,
     useUpdateCategoryMutation,
+    useGetCategoryQuery,
     useGetAllCategoriesQuery,
     useDeleteCategoryMutation,
 } = categoryApi

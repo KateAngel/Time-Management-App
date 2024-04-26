@@ -1,37 +1,45 @@
 // ToDoList.tsx
-import { useState } from 'react'
-import {
-    Box,
-    Breadcrumbs,
-    Container,
-    Typography,
-    List,
-    IconButton,
-    Tooltip,
-} from '@mui/material'
+import { useState, useEffect } from 'react'
+import { Box, Container, List } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp'
-import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
+import { toast } from 'react-toastify'
+import { DateTime } from 'luxon'
+import FullScreenLoader from '../../components/FullScreenLoader'
+import ActionButtons from '../../components/profile/ActionButtons'
+import DeleteConfirmationDialog from '../../components/profile/DeleteConfirmationDialog'
 import TaskForm from '../../components/profile/toDoList/TaskForm'
-import {
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-} from '../../styles/taskStyles'
+import ToDoItem from '../../components/profile/toDoList/ToDoItem'
 import { ITask } from '../../redux/api/types'
+import {
+    useGetAllTasksQuery,
+    useAddTaskMutation,
+    useUpdateTaskMutation,
+    useDeleteTaskMutation,
+} from '../../redux/api/todoApi'
 import { TabTitleTypography } from '../../styles/profile.styles'
 
 const ToDoList = () => {
     const theme = useTheme()
 
-    const [tasks, setTasks] = useState<ITask[]>([])
+    const { isLoading, isError, error, data: tasks } = useGetAllTasksQuery()
+
+    const [addTask] = useAddTaskMutation()
+    const [updateTask] = useUpdateTaskMutation()
+    const [deleteTask] = useDeleteTaskMutation()
+
+    //const [tasks, setTasks] = useState<ITask[]>([])
     const [showTaskForm, setShowTaskForm] = useState<boolean>(false)
     const [selectedTask, setSelectedTask] = useState<ITask | null>(null)
+//console.log('openSelectedTask', selectedTask)
+    const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false)
+
+    const [filterText, setFilterText] = useState<string>('')
+    const [selectedFilters, setSelectedFilters] = useState<string[]>([])
 
     const openTaskForm = (task: ITask | null = null) => {
         setSelectedTask(task)
         setShowTaskForm(true)
+        console.log('openTaskForm', task)
     }
 
     const closeTaskForm = () => {
@@ -39,122 +47,124 @@ const ToDoList = () => {
         setSelectedTask(null)
     }
 
-    const saveTask = (editedTask: ITask) => {
-        const now = new Date()
-        editedTask.lastModifiedDate = now
+    const handleSaveTask = (editedTask: ITask) => {
+        const now = DateTime.now()
+        editedTask.updated_at = now
 
         if (selectedTask) {
             // Editing existing task
-            const updatedTasks = tasks.map((task) =>
-                task.id === selectedTask.id ? editedTask : task,
-            )
-
-            setTasks(updatedTasks)
+            updateTask(editedTask)
         } else {
             // Adding new task
-            editedTask.id = tasks.length + 1
-            editedTask.createdDate = now
-            setTasks([...tasks, editedTask])
+            addTask(editedTask)
         }
 
         closeTaskForm()
     }
 
-    const deleteTask = (taskId: number) => {
-        const updatedTasks = tasks.filter((task) => task.id !== taskId)
-        setTasks(updatedTasks)
+    const handleDelete = (taskId: string) => {
+        setSelectedTask(tasks?.find((task) => task.id === taskId) || null)
+
+        setDeleteConfirmation(true)
+    }
+
+    const handleConfirmDelete = () => {
+        if (selectedTask) {
+            deleteTask(selectedTask!.id)
+            setDeleteConfirmation(false)
+        }
+    }
+
+    const handleCancelDelete = () => {
+        setDeleteConfirmation(false)
+    }
+
+    const filterTasks = (text: string, selectedFilters: string[]) => {
+        setFilterText(text)
+        setSelectedFilters(selectedFilters)
+    }
+
+    const filteredTasks = tasks?.filter((task) => {
+        const matchesFilterText =
+            task.title.toLowerCase().includes(filterText.toLowerCase()) ||
+            task.description?.toLowerCase().includes(filterText.toLowerCase())
+
+        const matchesFilters =
+            selectedFilters.length === 0 ||
+            selectedFilters.some((filter) => task.title.includes(filter))
+
+        return matchesFilterText && matchesFilters
+    })
+
+    interface ErrorType {
+        data: {
+            error: {
+                message: string
+            }[]
+            message: string
+        }
+    }
+
+    useEffect(() => {
+        if (isError) {
+            const errorData = error as ErrorType
+
+            if (Array.isArray(errorData.data.error)) {
+                errorData.data.error.forEach((el) =>
+                    toast.error(el.message, {
+                        position: 'top-right',
+                    }),
+                )
+            } else {
+                toast.error(errorData.data.message, {
+                    position: 'top-right',
+                })
+            }
+        }
+    }, [error, isError, isLoading])
+
+    if (isLoading) {
+        return <FullScreenLoader />
     }
 
     return (
         <Container maxWidth="lg">
             <Box>
                 <TabTitleTypography>To-do list</TabTitleTypography>
-                <Tooltip title="Add Task">
-                    <IconButton
-                        onClick={() => openTaskForm()}
-                        //sx={{ backgroundColor: theme.palette.secondary.main }}
-                    >
-                        <AddCircleSharpIcon />
-                    </IconButton>
-                </Tooltip>
+                <ActionButtons
+                    openForm={() => openTaskForm()}
+                    filterItems={filterTasks}
+                    filterOptions={tasks?.map((task) => task.title) || []}
+                    tooltipTitle="Add Task"
+                />
                 {showTaskForm && (
                     <TaskForm
                         task={selectedTask || undefined}
-                        onSave={(editedTask) => saveTask(editedTask)}
+                        onSave={(editedTask) => handleSaveTask(editedTask)}
                         onCancel={closeTaskForm}
                     />
                 )}
                 <List>
-                    {tasks.map((task) => (
-                        <Accordion key={task.id}>
-                            <AccordionSummary>
-                                <Breadcrumbs
-                                    separator="›"
-                                    aria-label="breadcrumb"
-                                    sx={{
-                                        width: '88%',
-                                        fontSize: '1.5rem',
-                                    }}
-                                >
-                                    <Typography>
-                                        {task.projectCategory}
-                                    </Typography>
-                                    <Typography>{task.projectTitle}</Typography>
-                                    <Typography
-                                        variant="h3"
-                                        sx={{
-                                            width: '88%',
-                                            fontSize: '1.5rem',
-                                        }}
-                                    >
-                                        {task.title}
-                                    </Typography>
-                                </Breadcrumbs>
-                                <Typography>{task.status}</Typography>
-                                <Tooltip title="Edit">
-                                    <IconButton
-                                        onClick={() => {
-                                            openTaskForm(task)
-                                        }}
-                                    >
-                                        <EditIcon />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title="Delete">
-                                    <IconButton
-                                        onClick={() => deleteTask(task.id)}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>{task.description}</Typography>
-                                <Typography>
-                                    Due Date:{' '}
-                                    {task.dueDate?.toLocaleString('en-US', {
-                                        year: 'numeric',
-                                        month: 'numeric',
-                                        day: 'numeric',
-                                        hour: 'numeric',
-                                        minute: 'numeric',
-                                        second: 'numeric',
-                                    }) || ''}
-                                </Typography>
-                                <Typography>
-                                    Created Date:{' '}
-                                    {task.createdDate.toLocaleString()}
-                                </Typography>
-                                <Typography>
-                                    Last Modified Date:{' '}
-                                    {task.lastModifiedDate?.toLocaleString() ||
-                                        ''}
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                    ))}
+                    {filteredTasks &&
+                        filteredTasks.length > 0 &&
+                        [...filteredTasks]
+                            .sort((a, b) => a.title.localeCompare(b.title))
+                            .map((task: ITask) => (
+                                <Box key={task.id}>
+                                    <ToDoItem
+                                        task={task}
+                                        onEdit={() => openTaskForm(task)}
+                                        onDelete={() => handleDelete(task.id)}
+                                    />
+                                </Box>
+                            ))}
                 </List>
             </Box>
+            <DeleteConfirmationDialog
+                open={deleteConfirmation}
+                onClose={handleCancelDelete}
+                onConfirm={handleConfirmDelete}
+            />
         </Container>
     )
 }

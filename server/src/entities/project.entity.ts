@@ -26,7 +26,7 @@ export enum ProjectStatus {
 export class ProjectTitle extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
-    
+
     @CreateDateColumn()
     created_at: Date
 
@@ -41,10 +41,11 @@ export class ProjectTitle extends BaseEntity {
     })
     description!: string
 
-    @Column({ 
+    @Column({
         type: 'enum',
         enum: ProjectStatus,
-        default: ProjectStatus.UPCOMING, })
+        default: ProjectStatus.UPCOMING,
+    })
     status: ProjectStatus
 
     @Column()

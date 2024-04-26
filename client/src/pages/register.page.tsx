@@ -1,6 +1,6 @@
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Container, Typography } from '@mui/material'
+import { Box, Container, Typography, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 import { useEffect } from 'react'
@@ -34,6 +34,7 @@ export type RegisterInput = TypeOf<typeof registerSchema>
 
 const RegisterPage = () => {
     const theme = useTheme()
+    const isSMScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
     const methods = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema),
@@ -97,7 +98,51 @@ const RegisterPage = () => {
                 height: '100vh',
             }}
         >
-            <Box>
+            <Box
+                display="flex"
+                flexDirection={isSMScreen ? 'column' : 'row'}
+                sx={{
+                    borderRadius: 1,
+                    border: isSMScreen
+                        ? 'none'
+                        : `1px solid ${theme.palette.divider}`,
+                    backgroundColor: isSMScreen
+                        ? 'background.paper'
+                        : 'inherit',
+                }}
+            >
+                <Box
+                    maxWidth={isSMScreen ? 'auto' : '25rem'}
+                    sx={{
+                        p: { xs: '2rem', sm: '3rem' },
+                    }}
+                >
+                    <Typography
+                        textAlign="center"
+                        component="h1"
+                        sx={{
+                            color: 'primary.main',
+                            fontSize: { xs: '1rem', md: '2rem' },
+                            fontWeight: 600,
+                            letterSpacing: 1,
+                        }}
+                    >
+                        Welcome to
+                    </Typography>
+                    <TypographyTitle textAlign="center" />
+                    <Typography
+                        component="h2"
+                        sx={{
+                            color: 'text.secondary',
+                            fontSize: '0.9rem',
+                            mb: 2,
+                            mt: 4,
+                        }}
+                    >
+                        Create your account to get started!
+                    </Typography>
+                </Box>
+
                 <FormProvider {...methods}>
                     <Box
                         component="form"
@@ -107,35 +152,11 @@ const RegisterPage = () => {
                         maxWidth="25rem"
                         width="100%"
                         sx={{
-                            p: { xs: '1rem', sm: '2rem' },
+                            p: { xs: '2rem', sm: '3rem' },
                             borderRadius: 1,
                             backgroundColor: 'background.paper',
                         }}
                     >
-                        <Typography
-                            textAlign="center"
-                            component="h1"
-                            sx={{
-                                color: 'primary.main',
-                                fontSize: { xs: '1rem', md: '2rem' },
-                                fontWeight: 600,
-                                letterSpacing: 1,
-                            }}
-                        >
-                            Welcome to
-                        </Typography>
-                        <TypographyTitle textAlign="center" />
-                        <Typography
-                            component="h2"
-                            sx={{
-                                color: 'text.secondary',
-                                fontSize: '0.9rem',
-                                mb: 2,
-                                mt: 4,
-                            }}
-                        >
-                            Create your account to get started!
-                        </Typography>
                         <FormInput
                             name="email"
                             label="Email Address"

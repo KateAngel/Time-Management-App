@@ -1,6 +1,6 @@
 import React from 'react'
-import { Typography, Box } from '@mui/material'
-import { IProject } from '../../../redux/api/types'
+import { Box, Typography, Breadcrumbs } from '@mui/material'
+import { ITask } from '../../../redux/api/types'
 import {
     Accordion,
     AccordionSummary,
@@ -8,31 +8,41 @@ import {
 } from '../../../styles/taskStyles'
 import ItemActionsMenu from '../ItemActionsMenu'
 
-interface ProjectItemProps {
-    project: IProject
+interface ToDoItemProps {
+    task: ITask
     onEdit: () => void
     onDelete: () => void
 }
 
-const ProjectItem: React.FC<ProjectItemProps> = ({
-    project,
-    onEdit,
-    onDelete,
-}) => {
+const ToDoItem: React.FC<ToDoItemProps> = ({ task, onEdit, onDelete }) => {
     return (
-        <Accordion key={project.id}>
-            <AccordionSummary sx={{ height: '10rem' }}>
+        <Accordion key={task.id}>
+            <AccordionSummary>
                 <Box sx={{ position: 'absolute', top: 8, left: 8 }}>
-                    <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        gutterBottom
+                    <Breadcrumbs
+                        separator="›"
+                        aria-label="breadcrumb"
                         sx={{ fontWeight: 'bold' }}
                     >
-                        {project.category?.projectCategory
-                            ? project.category.projectCategory
-                            : 'No category'}
-                    </Typography>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontWeight: 'bold' }}
+                        >
+                            {task.project?.category
+                                ? task.project.category.projectCategory
+                                : 'No category'}
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontWeight: 'bold' }}
+                        >
+                            {task.project?.projectTitle
+                                ? task.project.projectTitle
+                                : 'No project'}
+                        </Typography>
+                    </Breadcrumbs>
                 </Box>
                 <ItemActionsMenu onEdit={onEdit} onDelete={onDelete} />
                 <Box
@@ -44,16 +54,16 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                     }}
                 >
                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                        {project.projectTitle}
+                        {task.title}
                     </Typography>
                     <Typography
                         variant="body2"
                         color="text.secondary"
                         fontSize={12}
                     >
-                        Due Date: <br />
-                        {project.dueDate
-                            ? project.dueDate.toLocaleString({
+                        Due Date:{' '}
+                        {task.dueDate
+                            ? task.dueDate.toLocaleString({
                                   year: 'numeric',
                                   month: 'short',
                                   day: '2-digit',
@@ -63,19 +73,19 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                             : ''}
                     </Typography>
                 </Box>
-                <Typography sx={{ position: 'absolute', bottom: 8, right: 8 }}>
-                    {project.status}
+                <Typography sx={{ position: 'absolute', top: 8, right: 48 }}>
+                    {task.status}
                 </Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Typography>{project.description}</Typography>
+                <Typography>{task.description}</Typography>
                 <Typography
                     variant="body2"
                     color="text.secondary"
                     fontSize={12}
                 >
                     Created:{' '}
-                    {project.created_at.toLocaleString({
+                    {task.created_at.toLocaleString({
                         year: 'numeric',
                         month: 'short',
                         day: '2-digit',
@@ -87,8 +97,8 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                     fontSize={12}
                 >
                     Last Edited:{' '}
-                    {project.updated_at &&
-                        project.updated_at.toLocaleString({
+                    {task.updated_at &&
+                        task.updated_at.toLocaleString({
                             year: 'numeric',
                             month: 'short',
                             day: '2-digit',
@@ -99,4 +109,4 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
     )
 }
 
-export default ProjectItem
+export default ToDoItem

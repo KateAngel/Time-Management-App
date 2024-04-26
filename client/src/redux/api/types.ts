@@ -17,15 +17,30 @@ export interface IGenericResponse {
 }
 
 export interface ITask {
-    id: number
+    id: string
     title: string
     description?: string
-    createdDate: Date
-    lastModifiedDate?: Date
-    dueDate?: Date
     status: string
-    projectCategory: string
-    projectTitle: string
+    //isCompleted: boolean
+    dueDate?: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+    project: IProject
+}
+
+export interface ITaskCreate {
+    title: string
+    description?: string
+    status: string
+    dueDate?: DateTime
+    projectId: IProject['id']
+}
+export type ITaskUpdate = ITaskCreate
+
+export type ITaskAPI = ITask & {
+    dueDate: string
+    created_at: string
+    updated_at: string
 }
 
 export interface IProject {
@@ -36,7 +51,7 @@ export interface IProject {
     dueDate?: DateTime
     created_at: DateTime
     updated_at: DateTime
-    projectCategory: string | null
+    category: ICategory
 }
 
 export type IProjectAPI = IProject & {

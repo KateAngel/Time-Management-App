@@ -9,6 +9,7 @@ import {
     IconButton,
     InputLabel,
     MenuItem,
+    OutlinedInput,
     Select,
     TextField,
     Tooltip,
@@ -73,7 +74,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             dueDate: DateTime.now(),
             created_at: DateTime.now(),
             updated_at: DateTime.now(),
-            projectCategory: null,
+            category: {} as ICategory,
         },
     )
 
@@ -155,26 +156,29 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                             }
                         />
                     </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        sm={8}
-                        md={4}
-                        sx={{ width: { xs: '100%', sm: '67%', md: '33%' } }}
-                    >
+                    <Grid item xs={12} sm={8} md={4}>
                         <FormControl fullWidth>
                             <InputLabel id="project-category-label">
                                 Project Category
                             </InputLabel>
                             <Select
                                 labelId="project-category-label"
-                                value={editedProject.projectCategory || ''}
+                                value={
+                                    editedProject.category.projectCategory || ''
+                                }
                                 onChange={(e) =>
                                     setEditedProject({
                                         ...editedProject,
-                                        projectCategory: e.target
-                                            .value as string,
+                                        category:
+                                            categories.find(
+                                                (category) =>
+                                                    category.projectCategory ===
+                                                    e.target.value,
+                                            ) || ({} as ICategory),
                                     })
+                                }
+                                input={
+                                    <OutlinedInput label="Project Category" />
                                 }
                             >
                                 {categories.map((category) => (
@@ -188,13 +192,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        sm={8}
-                        md={4}
-                        sx={{ width: { xs: '100%', sm: '67%', md: '33%' } }}
-                    >
+                    <Grid item xs={12} sm={8} md={4}>
                         <FormControl fullWidth>
                             <InputLabel id="status-label">Status</InputLabel>
                             <Select
@@ -203,7 +201,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                                 onChange={(e) =>
                                     setEditedProject({
                                         ...editedProject,
-                                        status: e.target.value as string,
+                                        status: e.target.value ?? null,
                                     })
                                 }
                             >
@@ -215,13 +213,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid
-                        item
-                        xs={12}
-                        sm={8}
-                        md={4}
-                        sx={{ width: { xs: '100%', sm: '67%', md: '33%' } }}
-                    >
+                    <Grid item xs={12} sm={8} md={4}>
                         <>
                             <DateTimePicker<DateTime>
                                 label="Due Date"

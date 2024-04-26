@@ -2,19 +2,12 @@ import {
     FormHelperText,
     Typography,
     FormControl,
-    Input as _Input,
+    Input,
     InputProps,
 } from '@mui/material'
-import { styled, useTheme } from '@mui/material/styles'
-import { FC } from 'react'
+import { useTheme } from '@mui/material/styles'
+import { FC, useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-
-const Input = styled(_Input)`
-    background-color: ${(props) => props.theme.palette.inputBG.main};
-    padding: 0.3rem 0.75rem;
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-`
 
 type IFormInputProps = {
     name: string
@@ -24,10 +17,20 @@ type IFormInputProps = {
 const FormInput: FC<IFormInputProps> = ({ name, label, ...otherProps }) => {
     const theme = useTheme()
 
+    const [isFocused, setIsFocused] = useState(false)
+
     const {
         control,
         formState: { errors },
     } = useFormContext()
+
+    const handleFocus = () => {
+        setIsFocused(true)
+    }
+
+    const handleBlur = () => {
+        setIsFocused(false)
+    }
 
     return (
         <Controller
@@ -51,6 +54,18 @@ const FormInput: FC<IFormInputProps> = ({ name, label, ...otherProps }) => {
                         fullWidth
                         disableUnderline
                         error={!!errors[name]}
+                        sx={{
+                            border: 'solid 1px',
+                            borderColor: isFocused
+                                ? 'primary.main'
+                                : theme.palette.divider,
+                            padding: '0.3rem 0.75rem',
+                            fontSize: '0.875rem',
+                            lineHeight: '1.25rem',
+                            transition: 'border-color 0.2s ease-in-out',
+                        }}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
                         {...otherProps}
                     />
                     <FormHelperText error={!!errors[name]}>

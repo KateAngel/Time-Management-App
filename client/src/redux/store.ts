@@ -24,7 +24,9 @@ export const store = configureStore({
     },
     devTools: process.env.NODE_ENV === 'development',
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({}).concat([
+        getDefaultMiddleware({ serializableCheck: false }).concat([
+            // 'serializableCheck: false' fixed error after changing to DateTime in api/projectAPI.
+            // Not sure yet that this is a good solution.
             authApi.middleware,
             userApi.middleware,
             categoryApi.middleware,
