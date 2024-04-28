@@ -10,7 +10,7 @@ import {
     OneToMany,
 } from 'typeorm'
 import { Task } from './task.entity'
-import { ProjectCategory } from './project.category.entity'
+import { Category } from './category.entity'
 import { User } from './user.entity'
 
 export enum ProjectStatus {
@@ -23,7 +23,7 @@ export enum ProjectStatus {
 }
 
 @Entity()
-export class ProjectTitle extends BaseEntity {
+export class Project extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -55,14 +55,14 @@ export class ProjectTitle extends BaseEntity {
     @JoinColumn()
     user: User
 
-    @ManyToOne((_type) => ProjectCategory, (category) => category.projects, {
+    @ManyToOne((_type) => Category, (category) => category.projects, {
         eager: false,
     })
     @JoinColumn()
-    category: ProjectCategory
+    category: Category
 
     @OneToMany((_type) => Task, (task) => task.project, { eager: true })
     tasks: Task[]
 }
 
-export default ProjectTitle
+export default Project

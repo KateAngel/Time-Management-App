@@ -9,8 +9,8 @@ import {
 } from 'typeorm'
 import Model from './model.entity'
 import { User } from './user.entity'
-import { ProjectCategory } from './project.category.entity'
-import { ProjectTitle } from './project.entity'
+import { Category } from './category.entity'
+import { Project } from './project.entity'
 
 export enum TaskStatus {
     UPCOMING = 'Upcoming',
@@ -23,7 +23,6 @@ export enum TaskStatus {
 
 @Entity()
 export class Task extends Model {
-
     @Column()
     title: string
 
@@ -35,7 +34,8 @@ export class Task extends Model {
     @Column({
         type: 'enum',
         enum: TaskStatus,
-        default: TaskStatus.UPCOMING })
+        default: TaskStatus.UPCOMING,
+    })
     status: TaskStatus
 
     @Column()
@@ -47,15 +47,15 @@ export class Task extends Model {
     @Column({ default: false })
     isDeleted: boolean
 
-    // @ManyToOne((_type) => ProjectCategory, (project) => project.tasks, { eager: false })
+    // @ManyToOne((_type) => Category, (project) => project.tasks, { eager: false })
     // @JoinColumn()
-    // category: ProjectCategory
+    // category: Category
 
-    @ManyToOne((_type) => ProjectTitle, (project) => project.tasks, {
+    @ManyToOne((_type) => Project, (project) => project.tasks, {
         eager: false,
     })
     @JoinColumn()
-    project: ProjectTitle
+    project: Project
 
     @ManyToOne((_type) => User, (user) => user.tasks, { eager: false })
     @JoinColumn()

@@ -24,7 +24,9 @@ export const createUserSchema = object({
 export const editUserSchema = object({
     body: object({
         name: string(),
-        age: number({invalid_type_error: "Age must be a number"}).lte(100).gt(5),
+        age: number({ invalid_type_error: 'Age must be a number' })
+            .lte(100)
+            .gt(5),
     }),
 })
 

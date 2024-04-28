@@ -18,10 +18,10 @@ import Grid from '@mui/material/Grid'
 import { useTheme } from '@mui/material/styles'
 import { DateTime } from 'luxon'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
-import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { IProject, ICategory } from '../../../redux/api/types'
 import { useGetAllCategoriesQuery } from '../../../redux/api/categoryApi'
+import { LoadingButton } from '@mui/lab'
 
 interface ProjectFormProps {
     project?: IProject
@@ -237,12 +237,16 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                     </Grid>
                 </Grid>
             </DialogContent>
-            <DialogActions>
-                <IconButton onClick={handleSave}>
-                    <Tooltip title="Save">
-                        <SaveIcon />
-                    </Tooltip>
-                </IconButton>
+            <DialogActions sx={{ justifyContent: 'center' }}>
+                <Tooltip title="Save">
+                    <LoadingButton
+                        onClick={handleSave}
+                        variant="contained"
+                        sx={{ fontWeight: 'bold', textTransform: 'none' }}
+                    >
+                        Save & Submit
+                    </LoadingButton>
+                </Tooltip>
             </DialogActions>
         </Dialog>
     )

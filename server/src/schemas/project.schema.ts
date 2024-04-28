@@ -1,45 +1,40 @@
-import { number, object, string, TypeOf, z } from 'zod'
+import { nativeEnum, number, object, string, TypeOf, z } from 'zod'
 import { ProjectStatus } from '../entities/project.entity'
-import { ProjectCategory } from '../entities/project.category.entity'
 
-export const createProjectSchema = object({
-  body: object({
+export const ProjectSchema = object({
     projectTitle: string({
-      required_error: 'Project Title is required',
-      invalid_type_error: "Project Title must be a string"
+        required_error: 'Project Title is required',
+        invalid_type_error: 'Project Title must be a string',
     }),
     description: string(),
-    status: z.optional(z.nativeEnum(ProjectStatus)),
+    status: z.optional(nativeEnum(ProjectStatus)),
     dueDate: z.coerce.date({
-      required_error: 'Due Date is required',
+        required_error: 'Due Date is required',
     }),
-    category: z.instanceof(ProjectCategory),
-  }),
+    categoryId: number({ required_error: 'Category is required' }),
+})
+
+export const createProjectSchema = object({
+    body: ProjectSchema
 })
 
 const params = {
-  params: object({
-    projectId: string(), // number() in database, but receiced as string from request
-  }),
+    params: object({
+        projectId: string(), // number() in database, but receiced as string from request
+    }),
 }
 
 export const getProjectSchema = object({
-  ...params,
+    ...params,
 })
 
 export const updateProjectSchema = object({
-  ...params,
-  body: object({
-    projectTitle: string(),
-    description: string(),
-    status: z.optional(z.nativeEnum(ProjectStatus)),
-    dueDate: z.coerce.date(),
-    category: z.instanceof(ProjectCategory),
-  }).partial(),
+    ...params,
+    body: ProjectSchema,
 })
 
 export const deleteProjectSchema = object({
-  ...params,
+    ...params,
 })
 
 export type CreateProjectInput = TypeOf<typeof createProjectSchema>['body']

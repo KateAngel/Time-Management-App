@@ -10,11 +10,10 @@ import {
     OneToMany,
 } from 'typeorm'
 import { User } from './user.entity'
-import { ProjectTitle } from './project.entity'
-import { Task } from './task.entity'
+import { Project } from './project.entity'
 
 @Entity()
-export class ProjectCategory extends BaseEntity {
+export class Category extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -36,20 +35,19 @@ export class ProjectCategory extends BaseEntity {
     @JoinColumn()
     user: User
 
-    @OneToMany((_type) => ProjectTitle, (project) => project.category, {
+    @OneToMany((_type) => Project, (project) => project.category, {
         eager: true,
     })
-    projects: ProjectTitle[]
+    projects: Project[]
 
     // @OneToMany((_type) => Task, (task) => task.category, { eager: true })
     // tasks: Task[]
 }
 
-export interface DprojectCategory {
+export interface Dcategory {
     id: number
     projectCategory: string
     description: string
     user: User
-    projects: ProjectTitle[]
-    tasks: Task[]
+    projects: Project[]
 }

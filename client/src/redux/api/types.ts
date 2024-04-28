@@ -54,6 +54,15 @@ export interface IProject {
     category: ICategory
 }
 
+export interface IProjectCreate {
+    projectTitle: string
+    description?: string
+    status: string
+    dueDate?: DateTime
+    categoryId: ICategory['id']
+}
+export type IProjectUpdate = IProjectCreate
+
 export type IProjectAPI = IProject & {
     dueDate: string
     created_at: string

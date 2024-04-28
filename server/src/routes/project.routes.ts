@@ -27,8 +27,8 @@ router
 
 router
     .route('/my-profile/projects/:projectId')
-    .get(getProjectHandler)
-    .patch(updateProjectHandler)
-    .delete(deleteProjectHandler)
+    .get(validate(getProjectSchema), getProjectHandler)
+    .patch(validate(updateProjectSchema), updateProjectHandler)
+    .delete(validate(deleteProjectSchema), deleteProjectHandler)
 
 export default router

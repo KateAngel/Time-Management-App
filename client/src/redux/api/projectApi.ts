@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { IProject, IProjectAPI } from './types'
+import { IProject, IProjectAPI, IProjectCreate, IProjectUpdate } from './types'
 import { DateTime } from 'luxon'
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string
@@ -11,13 +11,21 @@ export const projectApi = createApi({
     }),
     tagTypes: ['Projects'],
     endpoints: (builder) => ({
-        addProject: builder.mutation<IProject, Partial<IProject>>({
+        addProject: builder.mutation<IProject, IProject>({
             query(project) {
+                const transformedProject: IProjectCreate = {
+                    projectTitle: project.projectTitle,
+                    description: project.description,
+                    status: project.status,
+                    dueDate: project.dueDate,
+                    categoryId: project.category.id,
+                }
+
                 return {
                     url: 'my-profile/projects',
                     method: 'POST',
                     credentials: 'include',
-                    body: project,
+                    body: transformedProject,
                 }
             },
             invalidatesTags: [{ type: 'Projects', id: 'LIST' }],
@@ -25,13 +33,21 @@ export const projectApi = createApi({
                 result.data.project,
         }),
 
-        updateProject: builder.mutation<IProject, Partial<IProject>>({
+        updateProject: builder.mutation<IProject, IProject>({
             query(project) {
+                const transformedProject: IProjectUpdate = {
+                    projectTitle: project.projectTitle,
+                    description: project.description,
+                    status: project.status,
+                    dueDate: project.dueDate,
+                    categoryId: project.category.id,
+                }
+
                 return {
                     url: `my-profile/projects/${project.id}`,
                     method: 'PATCH',
                     credentials: 'include',
-                    body: project,
+                    body: transformedProject,
                 }
             },
             invalidatesTags: (result, error, { id }) => [

@@ -1,9 +1,20 @@
-import { object, string, TypeOf, z, ZodSchema } from 'zod'
+import { nativeEnum, number, object, string, TypeOf, z, ZodSchema } from 'zod'
 import { TaskStatus } from '../entities/task.entity'
-import { ProjectTitle } from '../entities/project.entity'
-import { ProjectCategory } from '../entities/project.category.entity'
-import { NextFunction, Request, Response } from 'express'
-import { idSchema, projectTitleSchema, taskSchema } from './base.schemas'
+
+export const taskSchema = object({
+    title: string({
+        required_error: 'Project Title is required',
+        invalid_type_error: 'Project Title must be a string',
+    }),
+    description: string().optional(),
+    status: nativeEnum(TaskStatus),
+    dueDate: z.coerce.date({
+        required_error: 'Due Date is required',
+    }),
+    projectId: number({
+        required_error: 'Project is required',
+    }),
+})
 
 export const createTaskSchema = object({
     body: taskSchema,

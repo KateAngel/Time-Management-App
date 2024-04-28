@@ -20,10 +20,10 @@ import Grid from '@mui/material/Grid'
 import { useTheme } from '@mui/material/styles'
 import { DateTime } from 'luxon'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
-import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { ITask, IProject } from '../../../redux/api/types'
 import { useGetAllProjectsQuery } from '../../../redux/api/projectApi'
+import { LoadingButton } from '@mui/lab'
 
 interface TaskFormProps {
     task?: ITask
@@ -89,34 +89,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
             project: {} as IProject,
         },
     )
-
-    // useEffect(() => {
-    //     if (task && projects.length > 0) {
-    //         const projectWithCategory: IProject | undefined = projects.find(
-    //             (project) => project.id === task.project.id,
-    //         )
-
-    //         console.log(
-    //             'projectWithCategory',
-    //             projects.find((project) => project.id === task.project.id),
-    //         )
-
-    //         if (projectWithCategory) {
-    //             setEditedTask({
-    //                 ...task,
-    //                 project: projectWithCategory,
-    //                 // project: {
-    //                 //     ...task.project,
-    //                 //     category: projectWithCategory.category,
-    //                 // },
-    //             })
-    //         } else {
-    //             setEditedTask({
-    //                 ...task,
-    //             })
-    //         }
-    //     }
-    // }, [task, projects])
 
     useEffect(() => {
         if (task) {
@@ -319,12 +291,16 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
                     </Grid>
                 </Grid>
             </DialogContent>
-            <DialogActions>
-                <IconButton onClick={handleSave}>
-                    <Tooltip title="Save">
-                        <SaveIcon />
-                    </Tooltip>
-                </IconButton>
+            <DialogActions sx={{ justifyContent: 'center' }}>
+                <Tooltip title="Save">
+                    <LoadingButton
+                        onClick={handleSave}
+                        variant="contained"
+                        sx={{ fontWeight: 'bold', textTransform: 'none' }}
+                    >
+                        Save & Submit
+                    </LoadingButton>
+                </Tooltip>
             </DialogActions>
         </Dialog>
     )

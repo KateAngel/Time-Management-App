@@ -3,8 +3,8 @@ import crypto from 'crypto'
 import { Entity, Column, BeforeInsert, Index, OneToMany } from 'typeorm'
 import Model from './model.entity'
 import { Task } from './task.entity'
-import { ProjectTitle } from './project.entity'
-import { ProjectCategory } from './project.category.entity'
+import { Project } from './project.entity'
+import { Category } from './category.entity'
 
 export enum RoleEnumType {
     USER = 'user',
@@ -56,15 +56,15 @@ export class User extends Model {
     })
     verificationCode!: string | null
 
-    @OneToMany((_type) => ProjectCategory, (category) => category.user, {
+    @OneToMany((_type) => Category, (category) => category.user, {
         eager: true,
     })
-    categories: ProjectCategory[]
+    categories: Category[]
 
-    @OneToMany((_type) => ProjectTitle, (project) => project.user, {
+    @OneToMany((_type) => Project, (project) => project.user, {
         eager: true,
     })
-    projects: ProjectTitle[]
+    projects: Project[]
 
     @OneToMany((_type) => Task, (task) => task.user, { eager: true })
     tasks: Task[]

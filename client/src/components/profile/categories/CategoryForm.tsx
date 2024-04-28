@@ -11,9 +11,9 @@ import {
 } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { useTheme } from '@mui/material/styles'
-import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { ICategory } from '../../../redux/api/types'
+import { LoadingButton } from '@mui/lab'
 
 interface CategoryFormProps {
     category?: ICategory
@@ -124,12 +124,16 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                     </Grid>
                 </Grid>
             </DialogContent>
-            <DialogActions>
-                <IconButton onClick={handleSave}>
-                    <Tooltip title="Save">
-                        <SaveIcon />
-                    </Tooltip>
-                </IconButton>
+            <DialogActions sx={{ justifyContent: 'center' }}>
+                <Tooltip title="Save">
+                    <LoadingButton
+                        onClick={handleSave}
+                        variant="contained"
+                        sx={{ fontWeight: 'bold', textTransform: 'none' }}
+                    >
+                        Save & Submit
+                    </LoadingButton>
+                </Tooltip>
             </DialogActions>
         </Dialog>
     )
