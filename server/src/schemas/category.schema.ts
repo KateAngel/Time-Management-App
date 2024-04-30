@@ -2,8 +2,8 @@ import { object, number, string, TypeOf } from 'zod'
 
 export const categorySchema = object({
     projectCategory: string({
-        required_error: 'Project Category is required',
-    }),
+        required_error: 'Category is required',
+    }).min(1, 'Category is required'),
     description: string(),
 })
 

@@ -27,19 +27,20 @@ export const AccordionSummary = styled((props: AccordionSummaryProps) => (
 ))(({ theme }) => ({
     //backgroundColor: theme.palette.secondary.light,
     //color: theme.palette.secondary.contrastText,
-    minHeight: '7rem',
+    minHeight: '6rem',
 
     // flexDirection: 'row-reverse',
     '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
         transform: 'rotate(90deg)',
     },
     '& .MuiAccordionSummary-content': {
-        marginLeft: theme.spacing(1),
-        margin: '6px 0',
+        //marginLeft: theme.spacing(1),
+        marginTop: theme.spacing(6),
     },
 }))
 
 export const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     padding: theme.spacing(2),
     borderTop: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.default,
 }))

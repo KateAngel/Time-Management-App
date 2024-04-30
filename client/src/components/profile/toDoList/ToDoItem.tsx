@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Typography, Breadcrumbs } from '@mui/material'
 import { ITask } from '../../../redux/api/types'
 import {
@@ -15,10 +15,16 @@ interface ToDoItemProps {
 }
 
 const ToDoItem: React.FC<ToDoItemProps> = ({ task, onEdit, onDelete }) => {
+    const [isExpanded, setIsExpanded] = useState(false)
+
     return (
-        <Accordion key={task.id}>
+        <Accordion
+            key={task.id}
+            expanded={isExpanded}
+            onChange={() => setIsExpanded(!isExpanded)}
+        >
             <AccordionSummary>
-                <Box sx={{ position: 'absolute', top: 8, left: 8 }}>
+                <Box sx={{ position: 'absolute', top: 24, left: 16 }}>
                     <Breadcrumbs
                         separator="›"
                         aria-label="breadcrumb"
@@ -45,15 +51,27 @@ const ToDoItem: React.FC<ToDoItemProps> = ({ task, onEdit, onDelete }) => {
                     </Breadcrumbs>
                 </Box>
                 <ItemActionsMenu onEdit={onEdit} onDelete={onDelete} />
+                <Typography sx={{ position: 'absolute', top: 8, right: 40 }}>
+                    {task.status}
+                </Typography>
                 <Box
                     sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '20px',
-                        transform: 'translate(0, -50%)',
+                        maxWidth: 'calc(100% - 32px)',
                     }}
                 >
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            verticalAlign: 'middle',
+                            fontWeight: 'bold',
+                            flex: '1 1 auto',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            WebkitBoxOrient: 'vertical',
+                            WebkitLineClamp: isExpanded ? 7 : 1,
+                        }}
+                    >
                         {task.title}
                     </Typography>
                     <Typography
@@ -73,15 +91,14 @@ const ToDoItem: React.FC<ToDoItemProps> = ({ task, onEdit, onDelete }) => {
                             : ''}
                     </Typography>
                 </Box>
-                <Typography sx={{ position: 'absolute', top: 8, right: 48 }}>
-                    {task.status}
-                </Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Typography>{task.description}</Typography>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                    {task.description}
+                </Typography>
                 <Typography
                     variant="body2"
-                    color="text.secondary"
+                    color="secondary.main"
                     fontSize={12}
                 >
                     Created:{' '}
@@ -93,7 +110,7 @@ const ToDoItem: React.FC<ToDoItemProps> = ({ task, onEdit, onDelete }) => {
                 </Typography>
                 <Typography
                     variant="body2"
-                    color="text.secondary"
+                    color="secondary.main"
                     fontSize={12}
                 >
                     Last Edited:{' '}

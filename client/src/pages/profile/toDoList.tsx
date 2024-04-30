@@ -27,10 +27,9 @@ const ToDoList = () => {
     const [updateTask] = useUpdateTaskMutation()
     const [deleteTask] = useDeleteTaskMutation()
 
-    //const [tasks, setTasks] = useState<ITask[]>([])
     const [showTaskForm, setShowTaskForm] = useState<boolean>(false)
     const [selectedTask, setSelectedTask] = useState<ITask | null>(null)
-//console.log('openSelectedTask', selectedTask)
+    //console.log('openSelectedTask', selectedTask)
     const [deleteConfirmation, setDeleteConfirmation] = useState<boolean>(false)
 
     const [filterText, setFilterText] = useState<string>('')
@@ -39,7 +38,6 @@ const ToDoList = () => {
     const openTaskForm = (task: ITask | null = null) => {
         setSelectedTask(task)
         setShowTaskForm(true)
-        console.log('openTaskForm', task)
     }
 
     const closeTaskForm = () => {
@@ -150,7 +148,7 @@ const ToDoList = () => {
                         [...filteredTasks]
                             .sort((a, b) => a.title.localeCompare(b.title))
                             .map((task: ITask) => (
-                                <Box key={task.id}>
+                                <Box key={task.id} mt={theme.spacing(1)}>
                                     <ToDoItem
                                         task={task}
                                         onEdit={() => openTaskForm(task)}

@@ -107,17 +107,12 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
                         </Typography>
                     )}
                 </Divider>
-                <CardContent
-                    sx={
-                        {
-                            //position: 'relative',
-                        }
-                    }
-                >
+                <CardContent>
                     <Typography
                         variant="body2"
                         color="text.secondary"
                         gutterBottom
+                        minHeight={expanded ? 0 : 80}
                         sx={{
                             flex: '1 1 auto',
                             overflow: 'hidden',

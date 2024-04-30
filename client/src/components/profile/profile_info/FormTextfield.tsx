@@ -27,7 +27,14 @@ const FormTextField: FC<IFormProps> = ({ name, ...otherProps }) => {
             <TextField
                 variant="filled"
                 {...otherProps}
-                sx={{ width: { xs: '100%', md: '70%' }, textAlign: 'left' }}
+                sx={{
+                    width: { xs: '100%', md: '70%' },
+                    textAlign: 'left',
+                    '& .Mui-disabled': {
+                        backgroundColor: theme.palette.inputBG.dark,
+                        opacity: 0.7,
+                    },
+                }}
             />
         </Typography>
     )

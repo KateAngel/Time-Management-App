@@ -32,10 +32,12 @@ const TypographyTitle = ({
             {...otherProps}
         >
             Horae Harbor
-            {/*Temporaire*/}
-            {/*Time Tool*/}
-            {/*Time Record*/}
-            {/*tempus facilis*/}
+            {/* Other name options:
+            Prudentime
+            Temporaire
+            Time Tool
+            Time Record
+            Tempus Facilis*/}
         </Typography>
     )
 }

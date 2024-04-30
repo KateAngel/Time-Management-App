@@ -7,6 +7,7 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
+    FormHelperText,
     IconButton,
     InputLabel,
     MenuItem,
@@ -24,7 +25,16 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { ITask, IProject } from '../../../redux/api/types'
 import { useGetAllProjectsQuery } from '../../../redux/api/projectApi'
 import { LoadingButton } from '@mui/lab'
+import { number, object, string, TypeOf } from 'zod'
 
+const taskSchema = object({
+    title: string()
+        .min(1, 'Title is required')
+        .max(250, 'Title must not exceed 250 characters'),
+    projectId: number(),
+})
+
+export type TaskFormData = TypeOf<typeof taskSchema>
 interface TaskFormProps {
     task?: ITask
     onSave: (editedTask: ITask) => void
@@ -90,6 +100,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
         },
     )
 
+    const [taskFormError, setTaskFormError] = useState<boolean>(false)
+
     useEffect(() => {
         if (task) {
             setEditedTask({
@@ -98,14 +110,25 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
         }
     }, [task])
 
-    useEffect(() => {
-        console.log('editedTask:', editedTask)
-    }, [editedTask])
+    // useEffect(() => {
+    //     console.log('editedTask:', editedTask)
+    // }, [editedTask])
 
     const handleSave = () => {
-        console.log('Saving Task:', editedTask)
-        onSave(editedTask)
-        onCancel()
+        const taskToParse = {
+            title: editedTask.title,
+            projectId: editedTask.project.id,
+        }
+
+        try {
+            taskSchema.parse(taskToParse)
+
+            onSave(editedTask)
+            onCancel()
+        } catch (error) {
+            // Display validation error message
+            setTaskFormError(true)
+        }
     }
 
     return (
@@ -148,7 +171,15 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
                                     title: e.target.value,
                                 })
                             }
+                            error={taskFormError}
+                            inputProps={{ maxLength: 250 }}
                         />
+                        {taskFormError && (
+                            <FormHelperText>
+                                * Title is required. Title must not exceed 250
+                                characters.
+                            </FormHelperText>
+                        )}
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
@@ -200,10 +231,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
                                                 projectTitle,
                                         ) || ({} as IProject)
 
-                                    console.log(
-                                        'Selected Project:',
-                                        selectedProject,
-                                    )
+                                    // console.log(
+                                    //     'Selected Project:',
+                                    //     selectedProject,
+                                    // )
 
                                     setEditedTask({
                                         ...editedTask,
@@ -211,6 +242,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
                                     })
                                 }}
                                 input={<OutlinedInput label="Project" />}
+                                error={taskFormError}
                             >
                                 {projects.map((project) => (
                                     <MenuItem
@@ -245,6 +277,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
                                     </MenuItem>
                                 ))}
                             </Select>
+                            {taskFormError && (
+                                <FormHelperText>
+                                    * Project is required.
+                                </FormHelperText>
+                            )}
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={8} md={4}>

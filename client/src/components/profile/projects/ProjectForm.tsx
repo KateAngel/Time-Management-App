@@ -6,6 +6,7 @@ import {
     DialogContent,
     DialogTitle,
     FormControl,
+    FormHelperText,
     IconButton,
     InputLabel,
     MenuItem,
@@ -22,6 +23,16 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { IProject, ICategory } from '../../../redux/api/types'
 import { useGetAllCategoriesQuery } from '../../../redux/api/categoryApi'
 import { LoadingButton } from '@mui/lab'
+import { number, object, string, TypeOf } from 'zod'
+
+const projectSchema = object({
+    title: string()
+        .min(1, 'Title is required')
+        .max(50, 'Title must not exceed 50 characters'),
+    categoryId: number(),
+})
+
+export type ProjectFormData = TypeOf<typeof projectSchema>
 
 interface ProjectFormProps {
     project?: IProject
@@ -78,6 +89,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         },
     )
 
+    const [projectFormError, setProjectFormError] = useState<boolean>(false)
+
     useEffect(() => {
         if (project) {
             setEditedProject({ ...project })
@@ -85,9 +98,20 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     }, [project])
 
     const handleSave = () => {
-        console.log('Saving Project:', editedProject)
-        onSave(editedProject)
-        onCancel()
+        const projectToParse = {
+            title: editedProject.projectTitle,
+            categoryId: editedProject.category.id,
+        }
+
+        try {
+            projectSchema.parse(projectToParse)
+
+            onSave(editedProject)
+            onCancel()
+        } catch (error) {
+            // Display validation error message
+            setProjectFormError(true)
+        }
     }
 
     return (
@@ -132,7 +156,15 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                                     projectTitle: e.target.value,
                                 })
                             }
+                            error={projectFormError}
+                            inputProps={{ maxLength: 50 }}
                         />
+                        {projectFormError && (
+                            <FormHelperText>
+                                * Title is required. Title must not exceed 50
+                                characters.
+                            </FormHelperText>
+                        )}
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
@@ -180,6 +212,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                                 input={
                                     <OutlinedInput label="Project Category" />
                                 }
+                                error={projectFormError}
                             >
                                 {categories.map((category) => (
                                     <MenuItem
@@ -190,6 +223,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                                     </MenuItem>
                                 ))}
                             </Select>
+                            {projectFormError && (
+                                <FormHelperText>
+                                    * Category is required.
+                                </FormHelperText>
+                            )}
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={8} md={4}>

@@ -13,7 +13,7 @@ export const todoApi = createApi({
     endpoints: (builder) => ({
         addTask: builder.mutation<ITask, ITask>({
             query(task) {
-                console.log('Created Task:', task)
+                //console.log('Created Task:', task)
 
                 const transformedTask: ITaskCreate = {
                     title: task.title,
@@ -37,7 +37,7 @@ export const todoApi = createApi({
 
         updateTask: builder.mutation<ITask, ITask>({
             query(task) {
-                console.log('Updating Task:', task)
+                //console.log('Updating Task:', task)
 
                 const transformedTask: ITaskUpdate = {
                     title: task.title,

@@ -33,6 +33,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
                   // palette values for light mode
                   inputBG: {
                       main: Colors(mode).inputBG,
+                      dark: Colors(mode).muted,
                   },
                   background: {
                       default: Colors(mode).body_bg,
@@ -62,6 +63,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
                   // palette values for dark mode
                   inputBG: {
                       main: Colors(mode).inputBG,
+                      dark: Colors(mode).muted,
                   },
                   background: {
                       default: Colors(mode).body_bg,

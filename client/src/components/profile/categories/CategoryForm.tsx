@@ -9,11 +9,21 @@ import {
     TextField,
     Tooltip,
 } from '@mui/material'
+
 import Grid from '@mui/material/Grid'
 import { useTheme } from '@mui/material/styles'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { ICategory } from '../../../redux/api/types'
 import { LoadingButton } from '@mui/lab'
+import { object, string, TypeOf } from 'zod'
+
+const categorySchema = object({
+    projectCategory: string()
+        .min(1, 'Category is required')
+        .max(40, 'Category must not exceed 40 characters'),
+})
+
+export type CategoryFormData = TypeOf<typeof categorySchema>
 
 interface CategoryFormProps {
     category?: ICategory
@@ -38,6 +48,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         },
     )
 
+    const [categoryTitleError, setCategoryTitleError] = useState<boolean>(false)
+
     useEffect(() => {
         if (category) {
             setEditedCategory({ ...category })
@@ -45,8 +57,15 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
     }, [category])
 
     const handleSave = () => {
-        onSave(editedCategory)
-        onCancel()
+        try {
+            categorySchema.parse(editedCategory)
+            onSave(editedCategory)
+            onCancel()
+        } catch (error) {
+            // Display validation error message
+            //alert('Category title is required.')
+            setCategoryTitleError(true)
+        }
     }
 
     const handleInputChange = (
@@ -58,6 +77,11 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
             ...prevState,
             [name]: value,
         }))
+        // Remove validation error message
+
+        if (name === 'projectCategory' && categoryTitleError) {
+            setCategoryTitleError(false)
+        }
     }
 
     return (
@@ -92,7 +116,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                         <TextField
                             type="text"
                             name="projectCategory"
-                            label="Category Title"
+                            label="Title"
                             variant="filled"
                             sx={{
                                 width: '100%',
@@ -102,13 +126,19 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                             }}
                             value={editedCategory.projectCategory || ''}
                             onChange={handleInputChange}
+                            error={categoryTitleError}
+                            inputProps={{ maxLength: 40 }}
+                            helperText={
+                                categoryTitleError &&
+                                '* Title is required. Title must not exceed 40 characters.'
+                            }
                         />
                     </Grid>
                     <Grid item xs={8}>
                         <TextField
                             type="text"
                             name="description"
-                            label="Category Description"
+                            label="Description"
                             variant="filled"
                             multiline
                             minRows={4}

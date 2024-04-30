@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Typography, Box } from '@mui/material'
 import { IProject } from '../../../redux/api/types'
 import {
@@ -19,10 +19,16 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
     onEdit,
     onDelete,
 }) => {
+    const [isExpanded, setIsExpanded] = useState(false)
+
     return (
-        <Accordion key={project.id}>
-            <AccordionSummary sx={{ height: '10rem' }}>
-                <Box sx={{ position: 'absolute', top: 8, left: 8 }}>
+        <Accordion
+            key={project.id}
+            expanded={isExpanded}
+            onChange={() => setIsExpanded(!isExpanded)}
+        >
+            <AccordionSummary>
+                <Box sx={{ position: 'absolute', top: 24, left: 16 }}>
                     <Typography
                         variant="body2"
                         color="text.secondary"
@@ -35,15 +41,30 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                     </Typography>
                 </Box>
                 <ItemActionsMenu onEdit={onEdit} onDelete={onDelete} />
+                <Typography sx={{ position: 'absolute', top: 8, right: 40 }}>
+                    {project.status}
+                </Typography>
                 <Box
                     sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '20px',
-                        transform: 'translate(0, -50%)',
+                        // position: 'absolute',
+                        // top: '50%',
+                        // left: '20px',
+                        // transform: 'translate(0, -50%)',
+                        maxWidth: 'calc(100% - 16px)',
                     }}
                 >
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            fontWeight: '800',
+                            flex: '1 1 auto',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            WebkitBoxOrient: 'vertical',
+                            WebkitLineClamp: isExpanded ? 7 : 1,
+                        }}
+                    >
                         {project.projectTitle}
                     </Typography>
                     <Typography
@@ -63,15 +84,14 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                             : ''}
                     </Typography>
                 </Box>
-                <Typography sx={{ position: 'absolute', bottom: 8, right: 8 }}>
-                    {project.status}
-                </Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Typography>{project.description}</Typography>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                    {project.description}
+                </Typography>
                 <Typography
                     variant="body2"
-                    color="text.secondary"
+                    color="secondary.main"
                     fontSize={12}
                 >
                     Created:{' '}
@@ -83,7 +103,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                 </Typography>
                 <Typography
                     variant="body2"
-                    color="text.secondary"
+                    color="secondary.main"
                     fontSize={12}
                 >
                     Last Edited:{' '}

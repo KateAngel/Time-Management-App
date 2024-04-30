@@ -88,7 +88,7 @@ const ProfilePage = () => {
                             gap: 1,
                             minHeight: 0,
                             textTransform: 'none',
-                            borderBottom: '1px solid',
+                            borderBottom: `1px solid ${theme.palette.divider}`,
                             '&:hover': {
                                 backgroundColor: theme.palette.action.hover,
                             },
