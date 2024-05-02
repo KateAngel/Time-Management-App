@@ -18,7 +18,13 @@ module.exports = {
     rules: {
         indent: 'off',
         curly: ['warn', 'all'],
-        'prettier/prettier': 'warn',
+        'prettier/prettier': [
+            'error',
+            {
+                endOfLine: 'auto',
+            },
+        ],
+        //'prettier/prettier': 'warn',
         '@typescript-eslint/indent': 'off',
         '@typescript-eslint/no-use-before-define': 'off',
         '@typescript-eslint/explicit-member-accessibility': [
