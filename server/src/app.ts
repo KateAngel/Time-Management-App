@@ -14,6 +14,7 @@ import userRouter from './routes/user.routes'
 import categoryRouter from './routes/category.routes'
 import projectRouter from './routes/project.routes'
 import taskRouter from './routes/task.routes'
+import eventRouter from './routes/event.routes'
 
 // import nodemailer from 'nodemailer';
 // (async function () {
@@ -57,6 +58,7 @@ AppDataSource.initialize()
         app.use('/api/categories', categoryRouter)
         app.use('/api/projects', projectRouter)
         app.use('/api/to-do-list', taskRouter)
+        app.use('/api/calendar', eventRouter)
 
         // CHECKER
         app.get('/api/healthchecker', async (_, res: Response) => {

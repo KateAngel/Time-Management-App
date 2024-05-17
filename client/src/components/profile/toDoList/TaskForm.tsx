@@ -26,6 +26,7 @@ import { ITask, IProject } from '../../../redux/api/types'
 import { useGetAllProjectsQuery } from '../../../redux/api/projectApi'
 import { LoadingButton } from '@mui/lab'
 import { number, object, string, TypeOf } from 'zod'
+import { generateUUID } from '../../../Helpers/uuidGenerator'
 
 const taskSchema = object({
     title: string()
@@ -73,19 +74,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, onSave, onCancel }) => {
             console.error('Error fetching projects:', projectsError)
         }
     }, [projectsError])
-
-    // Function to generate a simple UUID (or maybe I will use a package 'uuid'???)
-    const generateUUID = (): string => {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-            /[xy]/g,
-            function (c) {
-                const r = (Math.random() * 16) | 0,
-                    v = c === 'x' ? r : (r & 0x3) | 0x8
-
-                return v.toString(16)
-            },
-        )
-    }
 
     const [editedTask, setEditedTask] = useState<ITask>(
         task || {

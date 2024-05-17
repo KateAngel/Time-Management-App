@@ -5,10 +5,12 @@ import { userApi } from './api/userApi'
 import { categoryApi } from './api/categoryApi'
 import { projectApi } from './api/projectApi'
 import { todoApi } from './api/todoApi'
+import { eventApi } from './api/eventApi'
 import userReducer from './features/userSlice'
 import categoryReducer from './features/categorySlice'
 import projectReducer from './features/projectSlice'
 import todoReducer from './features/todoSlice'
+import eventReducer from './features/eventSlice'
 
 export const store = configureStore({
     reducer: {
@@ -17,10 +19,12 @@ export const store = configureStore({
         [categoryApi.reducerPath]: categoryApi.reducer,
         [projectApi.reducerPath]: projectApi.reducer,
         [todoApi.reducerPath]: todoApi.reducer,
+        [eventApi.reducerPath]: eventApi.reducer,
         userState: userReducer,
         categoryState: categoryReducer,
         projectState: projectReducer,
         todoState: todoReducer,
+        eventState: eventReducer,
     },
     devTools: process.env.NODE_ENV === 'development',
     middleware: (getDefaultMiddleware) =>
@@ -32,6 +36,7 @@ export const store = configureStore({
             categoryApi.middleware,
             projectApi.middleware,
             todoApi.middleware,
+            eventApi.middleware,
         ]),
 })
 

@@ -76,3 +76,31 @@ export interface ICategory {
     created_at: Date
     updated_at: Date
 }
+
+export interface IEvent {
+    id: string
+    title: string
+    description?: string
+    startDate?: DateTime
+    endDate?: DateTime
+    allDay: boolean
+    status: string
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+export interface IEventCreate {
+    title: string
+    description?: string
+    startDate?: DateTime
+    endDate?: DateTime
+    allDay: boolean
+    status: string
+}
+
+export type IEventAPI = IEvent & {
+    startDate?: string
+    endDate?: string
+    created_at: string
+    updated_at: string
+}

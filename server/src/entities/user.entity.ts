@@ -5,6 +5,7 @@ import Model from './model.entity'
 import { Task } from './task.entity'
 import { Project } from './project.entity'
 import { Category } from './category.entity'
+import { Event } from './event.entity'
 
 export enum RoleEnumType {
     USER = 'user',
@@ -68,6 +69,9 @@ export class User extends Model {
 
     @OneToMany((_type) => Task, (task) => task.user, { eager: true })
     tasks: Task[]
+
+    @OneToMany((_type) => Event, (event) => event.user, { eager: true })
+    events: Event[]
 
     @BeforeInsert()
     async hashPassword() {
