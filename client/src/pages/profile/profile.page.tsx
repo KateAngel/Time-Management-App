@@ -53,7 +53,7 @@ const ProfilePage = () => {
     }
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" sx={{ minHeight: 'calc(100% - 280px)' }}>
             <Box
                 sx={{
                     mt: '4rem',

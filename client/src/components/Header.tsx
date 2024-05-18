@@ -20,7 +20,7 @@ import {
     LoadingButtonHeader as LoadingButton,
     LoadingButtonPrimary,
 } from '../styles/loadingButtonStyled'
-import TypographyTitle from '../styles/styled'
+import TypographyTitle from '../components/TypographyTitle'
 
 const Header = () => {
     const theme = useTheme()
@@ -93,7 +93,9 @@ const Header = () => {
                                 <Box sx={{ mr: 2 }}>
                                     <Tooltip
                                         title="My Account"
-                                        onClick={() => navigate('/my-profile')}
+                                        onClick={() =>
+                                            navigate('/my-profile/dashboard')
+                                        }
                                     >
                                         <IconButton sx={{ p: 0 }}>
                                             <Avatar
